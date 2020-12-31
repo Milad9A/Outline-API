@@ -1,0 +1,11 @@
+{
+  "name": "outline",
+  "version": "1.0.0",
+  "description": "API for Outline's Web app and Mobile app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Milad.A",
+  "license": "ISC"
+}
