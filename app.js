@@ -17,6 +17,12 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'))
 }
 
+// Use JSON
+app.use(express.json())
+
+// Routes
+app.use(require('./routes/user'))
+
 const PORT = process.env.PORT || 3000
 
 app.listen(
