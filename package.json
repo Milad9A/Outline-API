@@ -4,8 +4,8 @@
   "description": "API for Outline's Web app and Mobile app",
   "main": "app.js",
   "scripts": {
-    "start": "node app",
-    "dev": "cross-env NODE_ENV=development nodemon app"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "author": "Milad.A",
   "license": "MIT",
