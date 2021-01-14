@@ -81,7 +81,11 @@ const userSchema = new mongoose.Schema(
     }
 )
 
-// TODO: Add user references
+userSchema.virtual('posts', {
+    ref: 'Post',
+    localField: '_id',
+    foreignField: 'owner_user_id',
+})
 
 userSchema.methods.toJSON = function () {
     const user = this
