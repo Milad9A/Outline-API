@@ -1,9 +1,7 @@
 const express = require('express')
-const multer = require('multer')
-const sharp = require('sharp')
 const auth = require('../middleware/auth')
 const Post = require('../models/post')
-const User = require('../models/user')
+const Tag = require('../models/tag')
 
 const router = new express.Router()
 
@@ -11,6 +9,24 @@ router.post('/posts', auth, async (req, res) => {
     const post = new Post({
         ...req.body,
         owner_user_id: req.user._id,
+    })
+
+    let tags = []
+    post.tags.forEach((tag) => {
+        tags.push(tag)
+    })
+
+    tags.forEach(async (id) => {
+        tag = await Tag.findOne({
+            _id: id,
+        })
+        if (!tag)
+            return res.status(404).send({
+                message:
+                    'One or more of the tags that you provided are not available',
+            })
+        tag.posts.push(post)
+        await tag.save()
     })
 
     try {
@@ -59,6 +75,7 @@ router.patch('/posts/:id', auth, async (req, res) => {
         'answer_count',
         'comment_count',
         'favorite_count',
+        'tags',
     ]
     const isValidOperation = updates.every((update) =>
         allowedUpdates.includes(update)
@@ -78,6 +95,25 @@ router.patch('/posts/:id', auth, async (req, res) => {
         if (!post) return res.status(404).send()
 
         updates.forEach((update) => (post[update] = req.body[update]))
+
+        let tags = []
+        post.tags.forEach((tag) => {
+            tags.push(tag)
+        })
+
+        tags.forEach(async (id) => {
+            tag = await Tag.findOne({
+                _id: id,
+            })
+            if (!tag)
+                return res.status(404).send({
+                    message:
+                        'One or more of the tags that you provided are not available',
+                })
+            tag.posts.push(post)
+            await tag.save()
+        })
+
         await post.save()
 
         res.send(post)
@@ -92,8 +128,26 @@ router.delete('/posts/:id', auth, async (req, res) => {
             _id: req.params.id,
             owner_user_id: req.user._id,
         })
+
         if (!post) return res.status(404).send()
+
         res.send(post)
+    } catch (error) {
+        res.status(500).send()
+    }
+})
+
+router.get('/posts/:id/tags', auth, async (req, res) => {
+    try {
+        const post = await Post.findOne({
+            _id: req.params.id,
+        })
+
+        if (!post) return res.status(404).send()
+
+        await post.populate('tags').execPopulate()
+
+        res.send(post.tags)
     } catch (error) {
         res.status(500).send()
     }

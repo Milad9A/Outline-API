@@ -9,12 +9,10 @@ const postSchema = new mongoose.Schema(
         },
         last_editor_user_id: {
             type: mongoose.Schema.Types.ObjectId,
-            // required: true,
             ref: 'User',
         },
         accepted_answer_id: {
             type: mongoose.Schema.Types.ObjectId,
-            // required: true,
             ref: 'Comment',
         },
         post_type_id: {
@@ -34,10 +32,18 @@ const postSchema = new mongoose.Schema(
         score: {
             type: Number,
             default: 0,
+            validate(value) {
+                if (value < 0)
+                    throw new Error('Score must be a positive number')
+            },
         },
         view_count: {
             type: Number,
             default: 0,
+            validate(value) {
+                if (value < 0)
+                    throw new Error('View Count must be a positive number')
+            },
         },
         owner_display_name: {
             type: String,
@@ -50,15 +56,33 @@ const postSchema = new mongoose.Schema(
         answer_count: {
             type: Number,
             default: 0,
+            validate(value) {
+                if (value < 0)
+                    throw new Error('Answer Count must be a positive number')
+            },
         },
         comment_count: {
             type: Number,
             default: 0,
+            validate(value) {
+                if (value < 0)
+                    throw new Error('Comment must be a positive number')
+            },
         },
         favorite_count: {
             type: Number,
             default: 0,
+            validate(value) {
+                if (value < 0)
+                    throw new Error('Favorite Count must be a positive number')
+            },
         },
+        tags: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Tag',
+            },
+        ],
     },
     {
         timestamps: true,
