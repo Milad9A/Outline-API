@@ -59,11 +59,20 @@ const userSchema = new mongoose.Schema(
                 },
             },
         ],
-        badge_counts: [
-            { bronze: { type: Number } },
-            { silver: { type: Number } },
-            { gold: { type: Number } },
-        ],
+        badge_counts: {
+            bronze: {
+                type: 'Number',
+                default: 0,
+            },
+            silver: {
+                type: 'Number',
+                default: 0,
+            },
+            gold: {
+                type: 'Number',
+                default: 0,
+            },
+        },
     },
     {
         timestamps: true,
