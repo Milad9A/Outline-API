@@ -1,11 +1,7 @@
 const mongoose = require('mongoose')
 
 const tagSchema = new mongoose.Schema({
-    excerpt_post_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Post',
-    },
-    tag_name: {
+    name: {
         type: String,
         required: true,
         trim: true,
@@ -17,10 +13,10 @@ const tagSchema = new mongoose.Schema({
             if (value < 0) throw new Error('Count must be a positive number')
         },
     },
-    posts: [
+    questions: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Post',
+            ref: 'Question',
         },
     ],
 })
