@@ -43,28 +43,12 @@ const userSchema = new mongoose.Schema(
                     throw new Error('Reputation must be a positive number')
             },
         },
-        views: {
+        accept_rate: {
             type: Number,
             default: 0,
             validate(value) {
                 if (value < 0)
-                    throw new Error('Views must be a positive number')
-            },
-        },
-        upVotes: {
-            type: Number,
-            default: 0,
-            validate(value) {
-                if (value < 0)
-                    throw new Error('UpVotes must be a positive number')
-            },
-        },
-        downVotes: {
-            type: Number,
-            default: 0,
-            validate(value) {
-                if (value < 0)
-                    throw new Error('DownVotes must be a positive number')
+                    throw new Error('Accept rate must be a positive number')
             },
         },
         tokens: [
@@ -75,13 +59,37 @@ const userSchema = new mongoose.Schema(
                 },
             },
         ],
+        badge_counts: {
+            bronze: {
+                type: 'Number',
+                default: 0,
+            },
+            silver: {
+                type: 'Number',
+                default: 0,
+            },
+            gold: {
+                type: 'Number',
+                default: 0,
+            },
+        },
     },
     {
         timestamps: true,
     }
 )
 
-// TODO: Add user references
+userSchema.virtual('questions', {
+    ref: 'Question',
+    localField: '_id',
+    foreignField: 'owner_user_id',
+})
+
+userSchema.virtual('answers', {
+    ref: 'Answer',
+    localField: '_id',
+    foreignField: 'owner_user_id',
+})
 
 userSchema.methods.toJSON = function () {
     const user = this
