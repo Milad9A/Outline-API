@@ -29,24 +29,6 @@ router.get('/tags/:id', async (req, res) => {
     }
 })
 
-router.get('/tags/:id/posts', auth, async (req, res) => {
-    try {
-        const tag = await Tag.findOne({
-            _id: req.params.id,
-        })
-
-        if (!tag) return res.status(404).send()
-
-        await tag.populate('posts').execPopulate()
-
-        res.send(tag)
-    } catch (error) {
-        res.status(500).send()
-    }
-})
-
-// TODO: Only Admin should be able to update and delete tags
-
 router.patch('/tags/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body)
 
@@ -78,6 +60,22 @@ router.delete('/tags/:id', auth, async (req, res) => {
         res.send(tag)
     } catch (error) {
         res.status(500).send(error)
+    }
+})
+
+router.get('/tags/:id/questions', auth, async (req, res) => {
+    try {
+        const tag = await Tag.findOne({
+            _id: req.params.id,
+        })
+
+        if (!tag) return res.status(404).send()
+
+        await tag.populate('questions').execPopulate()
+
+        res.send(tag.questions)
+    } catch (error) {
+        res.status(500).send()
     }
 })
 
