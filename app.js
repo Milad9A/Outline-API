@@ -23,7 +23,7 @@ app.use(express.json())
 // Routes
 app.use(require('./routes/user'))
 app.use(require('./routes/question'))
-// app.use(require('./routes/post'))
+app.use(require('./routes/answer'))
 app.use(require('./routes/tag'))
 
 const PORT = process.env.PORT || 3000

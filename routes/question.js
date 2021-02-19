@@ -31,7 +31,7 @@ router.post('/questions', auth, async (req, res) => {
 
     try {
         await question.save()
-        res.status(201).send({ question })
+        res.status(201).send(question)
     } catch (error) {
         res.status(400).send(error)
     }
@@ -100,9 +100,7 @@ router.patch('/questions/:id', auth, async (req, res) => {
 
         res.send(question)
     } catch (error) {
-        res.status(400).send({
-            error: error,
-        })
+        res.status(400).send(error)
     }
 })
 
