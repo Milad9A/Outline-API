@@ -22,6 +22,7 @@ app.use(express.json())
 
 // Routes
 app.use(require('./routes/user'))
+app.use(require('./routes/question'))
 // app.use(require('./routes/post'))
 app.use(require('./routes/tag'))
 

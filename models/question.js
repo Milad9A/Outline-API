@@ -15,6 +15,7 @@ const questionSchema = new mongoose.Schema(
         ],
         title: {
             type: 'String',
+            required: true,
         },
         is_answered: {
             type: Boolean,
@@ -46,9 +47,11 @@ const questionSchema = new mongoose.Schema(
         },
         last_activity_date: {
             type: Date,
+            default: Date.now,
         },
         creation_date: {
             type: Date,
+            default: Date.now,
         },
     },
     {
