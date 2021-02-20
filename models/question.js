@@ -45,10 +45,6 @@ const questionSchema = new mongoose.Schema(
         score: {
             type: Number,
             default: 0,
-            validate(value) {
-                if (value < 0)
-                    throw new Error('Score must be a positive number')
-            },
         },
         last_activity_date: {
             type: Date,
