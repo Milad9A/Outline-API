@@ -16,6 +16,11 @@ const questionSchema = new mongoose.Schema(
         title: {
             type: 'String',
             required: true,
+            unique: true,
+        },
+        body: {
+            type: 'String',
+            required: true,
         },
         is_answered: {
             type: Boolean,

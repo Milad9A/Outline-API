@@ -11,6 +11,10 @@ const answerSchema = new mongoose.Schema({
         required: true,
         ref: 'Question',
     },
+    body: {
+        type: 'String',
+        required: true,
+    },
     is_accepted: {
         type: Boolean,
         default: false,
