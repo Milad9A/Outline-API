@@ -2,14 +2,42 @@ const express = require('express')
 const multer = require('multer')
 const sharp = require('sharp')
 const auth = require('../middleware/auth')
+const Role = require('../models/role')
 const User = require('../models/user')
 
 const router = new express.Router()
 
 router.post('/users', async (req, res) => {
-    const user = new User(req.body)
+    const updates = Object.keys(req.body)
+
+    const isValidOperation = !updates.includes('role')
+
+    if (!isValidOperation)
+        return res.status(400).send({ error: 'Unable to set role' })
 
     try {
+        const user = new User(req.body)
+        await user.save()
+        const token = await user.generateAuthToken()
+        res.status(201).send({ user, token })
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
+router.post('/users-admin', async (req, res) => {
+    const updates = Object.keys(req.body)
+
+    const isValidOperation = !updates.includes('role')
+
+    if (!isValidOperation)
+        return res.status(400).send({ error: 'Unable to set role' })
+
+    try {
+        const user = new User({
+            ...req.body,
+            role: Role.ADMIN,
+        })
         await user.save()
         const token = await user.generateAuthToken()
         res.status(201).send({ user, token })
@@ -59,7 +87,15 @@ router.get('/users/me', auth, async (req, res) => {
 
 router.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['name', 'email', 'password']
+    const allowedUpdates = [
+        'name',
+        'email',
+        'password',
+        'aboutMe',
+        'reputation',
+        'accept_rate',
+        'badge_counts',
+    ]
     const isValidOperation = updates.every((update) =>
         allowedUpdates.includes(update)
     )
