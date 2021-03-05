@@ -27,6 +27,7 @@ app.use(require('./routes/answer'))
 app.use(require('./routes/tag'))
 app.use(require('./routes/privilege'))
 app.use(require('./routes/badge'))
+app.use(require('./routes/article'))
 
 const PORT = process.env.PORT || 3000
 

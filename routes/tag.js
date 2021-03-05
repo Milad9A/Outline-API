@@ -15,6 +15,16 @@ router.post('/tags', auth, async (req, res) => {
     }
 })
 
+router.get('/tags', async (req, res) => {
+    try {
+        const tags = await Tag.find({})
+
+        res.send(tags)
+    } catch (error) {
+        res.status(500).send()
+    }
+})
+
 router.get('/tags/:id', async (req, res) => {
     const _id = req.params.id
 

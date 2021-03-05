@@ -20,6 +20,12 @@ const tagSchema = new mongoose.Schema({
             ref: 'Question',
         },
     ],
+    articles: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Article',
+        },
+    ],
 })
 
 const Tag = mongoose.model('Tag', tagSchema)
