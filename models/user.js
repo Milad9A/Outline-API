@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
+const Role = require('./role')
 
 const userSchema = new mongoose.Schema(
     {
@@ -9,6 +10,10 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
             trim: true,
+        },
+        role: {
+            type: Role,
+            default: Role.BASIC_USER,
         },
         email: {
             type: String,
