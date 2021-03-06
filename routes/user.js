@@ -46,6 +46,27 @@ router.post('/users-admin', async (req, res) => {
     }
 })
 
+router.post('/users-instructor', async (req, res) => {
+    const updates = Object.keys(req.body)
+
+    const isValidOperation = !updates.includes('role')
+
+    if (!isValidOperation)
+        return res.status(400).send({ error: 'Unable to set role' })
+
+    try {
+        const user = new User({
+            ...req.body,
+            role: Role.INSTRUCTOR,
+        })
+        await user.save()
+        const token = await user.generateAuthToken()
+        res.status(201).send({ user, token })
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
 router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(
