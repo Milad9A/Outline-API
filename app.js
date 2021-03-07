@@ -21,15 +21,15 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json())
 
 // Routes
-app.use(require('./routes/user'))
-app.use(require('./routes/question'))
-app.use(require('./routes/answer'))
-app.use(require('./routes/tag'))
-app.use(require('./routes/privilege'))
-app.use(require('./routes/badge'))
-app.use(require('./routes/article'))
-app.use(require('./routes/comment'))
-app.use(require('./routes/course'))
+app.use(require('./routes/user_route'))
+app.use(require('./routes/question_route'))
+app.use(require('./routes/answer_route'))
+app.use(require('./routes/tag_route'))
+app.use(require('./routes/privilege_route'))
+app.use(require('./routes/badge_route'))
+app.use(require('./routes/article_route'))
+app.use(require('./routes/comment_route'))
+app.use(require('./routes/course_route'))
 
 const PORT = process.env.PORT || 3000
 
