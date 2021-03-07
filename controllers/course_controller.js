@@ -89,6 +89,22 @@ const CourseController = {
         }
     },
 
+    getCourseCategories: async (req, res) => {
+        try {
+            const course = await Course.findOne({
+                _id: req.params.id,
+            })
+
+            if (!course) return res.status(404).send()
+
+            await course.populate('categories').execPopulate()
+
+            res.send(course.categories)
+        } catch (error) {
+            res.status(500).send()
+        }
+    },
+
     // Create (Remove existing contents) contents for an existing Course
     createContentsForCourse: async (req, res) => {
         const course = await Course.findById(req.params.id)

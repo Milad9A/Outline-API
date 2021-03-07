@@ -14,8 +14,11 @@ router.patch('/courses/:id', auth, CourseController.updateCourse)
 
 router.delete('/courses/:id', auth, CourseController.deleteCourse)
 
-// TODO
-// router.get('/courses/:id/categories', auth, async (req, res) => {})
+router.get(
+    '/courses/:id/categories',
+    auth,
+    CourseController.getCourseCategories
+)
 
 // Create (Remove existing contents) contents for an existing Course
 router.post(
