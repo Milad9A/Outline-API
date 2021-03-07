@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const CourseContent = require('./course_content')
 
 const courseSchema = new mongoose.Schema(
     {
@@ -44,6 +45,12 @@ const courseSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        contents: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'CourseContent',
+            },
+        ],
     },
     {
         timestamps: true,
