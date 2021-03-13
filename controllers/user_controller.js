@@ -67,10 +67,16 @@ const UserController = {
                 req.body.email,
                 req.body.password
             )
+            if (!user)
+                return res.status(401).send({
+                    message: 'Invalid Email or Password',
+                })
+
             const token = await user.generateAuthToken()
             res.send({ user, token })
         } catch (error) {
-            res.status(400).send()
+            console.log(error)
+            res.status(error.status).send({ message: error.message })
         }
     },
 

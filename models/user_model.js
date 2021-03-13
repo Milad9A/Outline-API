@@ -3,6 +3,7 @@ const validator = require('validator')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const Role = require('./role_model')
+const InvalidEmailOrPasswordError = require('../errors/invalid_email_or_password_error')
 
 const userSchema = new mongoose.Schema(
     {
@@ -137,10 +138,11 @@ userSchema.methods.generateAuthToken = async function () {
 
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
-    if (!user) throw new Error('Unable to login')
+    if (!user)
+        throw new InvalidEmailOrPasswordError('Invalid Email or Password')
 
     const isMatch = await bcrypt.compare(password, user.password)
-    if (!isMatch) throw Error('Unable to login')
+    if (!isMatch) throw InvalidEmailOrPasswordError('Invalid Email or Password')
 
     return user
 }
