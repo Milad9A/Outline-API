@@ -20,6 +20,14 @@ if (process.env.NODE_ENV === 'development') {
 // Use JSON
 app.use(express.json())
 
+// Enable Access-Control-Origin
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE')
+    res.header('Access-Control-Allow-Headers', 'Content-Type')
+    next()
+})
+
 // Routes
 app.use(require('./routes/user_route'))
 app.use(require('./routes/question_route'))
