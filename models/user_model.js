@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema(
             trim: true,
             default: "I'm a human :)",
         },
+        tags: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Tag',
+            },
+        ],
         avatar: {
             type: Buffer,
         },

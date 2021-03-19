@@ -116,6 +116,7 @@ const UserController = {
             'reputation',
             'accept_rate',
             'badge_counts',
+            'tags',
         ]
         const isValidOperation = updates.every((update) =>
             allowedUpdates.includes(update)
