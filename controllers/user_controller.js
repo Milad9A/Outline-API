@@ -73,6 +73,9 @@ const UserController = {
                 })
 
             const token = await user.generateAuthToken()
+
+            await user.populate('tags').execPopulate()
+
             res.send({ user, token })
         } catch (error) {
             console.log(error)
@@ -103,6 +106,8 @@ const UserController = {
     },
 
     getUserMe: async (req, res) => {
+        await req.user.populate('tags').execPopulate()
+
         res.send(req.user)
     },
 
