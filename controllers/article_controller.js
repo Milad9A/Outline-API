@@ -28,6 +28,8 @@ const ArticleController = {
 
         try {
             await article.save()
+            await article.populate('tags').execPopulate()
+
             res.status(201).send(article)
         } catch (error) {
             res.status(400).send(error)
