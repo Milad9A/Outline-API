@@ -7,10 +7,6 @@ const articleSchema = new mongoose.Schema(
             required: true,
             ref: 'User',
         },
-        content_format: {
-            type: String,
-            required: true,
-        },
         content: {
             type: String,
             required: true,
