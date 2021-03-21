@@ -115,7 +115,6 @@ const UserController = {
         const updates = Object.keys(req.body)
         const allowedUpdates = [
             'name',
-            'email',
             'password',
             'aboutMe',
             'reputation',
@@ -133,6 +132,8 @@ const UserController = {
         try {
             updates.forEach((update) => (req.user[update] = req.body[update]))
             await req.user.save()
+
+            await req.user.populate('tags').execPopulate()
 
             res.send(req.user)
         } catch (error) {
