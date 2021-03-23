@@ -28,6 +28,7 @@ const QuestionController = {
 
         try {
             await question.save()
+            await question.populate('tags').execPopulate()
             res.status(201).send(question)
         } catch (error) {
             res.status(400).send(error)
