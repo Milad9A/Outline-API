@@ -1,8 +1,24 @@
 const express = require('express')
 const auth = require('../middleware/auth')
+const multer = require('multer')
+
 const CourseController = require('../controllers/course_controller')
 
 const router = express.Router()
+
+const upload = multer({
+    limits: {
+        fileSize: 10000000,
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(mp4|mkv)$/)) {
+            return cb(
+                new Error('Please upload a valid video format (mp4 or mkv)')
+            )
+        }
+        cb(undefined, true)
+    },
+})
 
 router.post('/courses', auth, CourseController.createCourse)
 
@@ -32,6 +48,12 @@ router.patch(
     '/courses/:id/contents',
     auth,
     CourseController.UpdateContentsForCourse
+)
+
+router.post(
+    '/video-upload-test',
+    upload.single('content'),
+    CourseController.uploadVideo
 )
 
 module.exports = router

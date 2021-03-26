@@ -2,6 +2,9 @@ const Course = require('../models/course_model')
 const CourseContent = require('../models/course_content_model')
 const Role = require('../models/role_model')
 const User = require('../models/user_model')
+const credentials = require('../config/credentials.json')
+const { google } = require('googleapis')
+const streamifier = require('streamifier')
 
 const CourseController = {
     createCourse: async (req, res) => {
@@ -174,6 +177,39 @@ const CourseController = {
         } catch (error) {
             res.status(400).send(error)
         }
+    },
+
+    // testing uploading videos to google drive
+    uploadVideo: async (req, res) => {
+        const scopes = ['https://www.googleapis.com/auth/drive']
+
+        const auth = new google.auth.JWT(
+            credentials.client_email,
+            null,
+            credentials.private_key,
+            scopes
+        )
+
+        const drive = google.drive({ version: 'v3', auth })
+
+        const buffer = await req.file.buffer
+        const name = req.file.originalname
+        const mimetype = req.file.mimetype
+
+        const driveResponse = await drive.files.create({
+            requestBody: {
+                name: name,
+                mimeType: mimetype,
+                parents: ['1rX5J_XGIM45Ey65qJJGui1w6EeKgDPP2'],
+            },
+            media: {
+                mimeType: mimetype,
+                body: streamifier.createReadStream(buffer),
+            },
+        })
+        console.log(driveResponse)
+
+        res.send(driveResponse)
     },
 }
 
