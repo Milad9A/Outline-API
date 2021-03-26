@@ -6,7 +6,11 @@ const courseContentSchema = new mongoose.Schema({
         required: true,
         ref: 'Course',
     },
-    content_data: {
+    content_name: {
+        type: String,
+        required: true,
+    },
+    content_link: {
         type: String,
         required: true,
     },

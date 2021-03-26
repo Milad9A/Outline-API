@@ -6,6 +6,15 @@ const credentials = require('../config/credentials.json')
 const { google } = require('googleapis')
 const streamifier = require('streamifier')
 
+const scopes = ['https://www.googleapis.com/auth/drive']
+const auth = new google.auth.JWT(
+    credentials.client_email,
+    null,
+    credentials.private_key,
+    scopes
+)
+const drive = google.drive({ version: 'v3', auth })
+
 const CourseController = {
     createCourse: async (req, res) => {
         const user = await User.findById(req.user._id)
@@ -108,7 +117,7 @@ const CourseController = {
         }
     },
 
-    // Create (Remove existing contents) contents for an existing Course
+    // // Create (Remove existing contents) contents for an existing Course
     createContentsForCourse: async (req, res) => {
         const course = await Course.findById(req.params.id)
 
@@ -145,7 +154,7 @@ const CourseController = {
         }
     },
 
-    // Update (Add with removing) the contents of an existing Course
+    // Update (Add without removing) the contents of an existing Course
     UpdateContentsForCourse: async (req, res) => {
         const course = await Course.findById(req.params.id)
 
@@ -177,39 +186,6 @@ const CourseController = {
         } catch (error) {
             res.status(400).send(error)
         }
-    },
-
-    // testing uploading videos to google drive
-    uploadVideo: async (req, res) => {
-        const scopes = ['https://www.googleapis.com/auth/drive']
-
-        const auth = new google.auth.JWT(
-            credentials.client_email,
-            null,
-            credentials.private_key,
-            scopes
-        )
-
-        const drive = google.drive({ version: 'v3', auth })
-
-        const buffer = await req.file.buffer
-        const name = req.file.originalname
-        const mimetype = req.file.mimetype
-
-        const driveResponse = await drive.files.create({
-            requestBody: {
-                name: name,
-                mimeType: mimetype,
-                parents: ['1rX5J_XGIM45Ey65qJJGui1w6EeKgDPP2'],
-            },
-            media: {
-                mimeType: mimetype,
-                body: streamifier.createReadStream(buffer),
-            },
-        })
-        console.log(driveResponse)
-
-        res.send(driveResponse)
     },
 }
 
