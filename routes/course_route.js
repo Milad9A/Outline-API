@@ -23,7 +23,7 @@ const upload = multer({
         }
         cb(undefined, true)
     },
-}).single('content')
+}).array('content')
 
 router.post('/courses', auth, CourseController.createCourse)
 
@@ -61,31 +61,33 @@ router.post('/courses/:id/contents', async (req, res) => {
         const drive = google.drive({ version: 'v3', auth })
 
         try {
-            const buffer = await req.file.buffer
-            const name = req.file.originalname
-            const mimetype = req.file.mimetype
-            const driveResponse = await drive.files.create({
-                requestBody: {
-                    name: name,
-                    mimeType: mimetype,
-                    parents: ['1rX5J_XGIM45Ey65qJJGui1w6EeKgDPP2'],
-                },
-                media: {
-                    mimeType: mimetype,
-                    body: streamifier.createReadStream(buffer),
-                },
-            })
-            const newContent = new CourseContent({
-                content_name: driveResponse.data.name,
-                content_link:
-                    'https://drive.google.com/file/d/' +
-                    driveResponse.data.id +
-                    '/view',
+            req.files.forEach(async (file) => {
+                const buffer = await file.buffer
+                const name = file.originalname
+                const mimetype = file.mimetype
+                const driveResponse = await drive.files.create({
+                    requestBody: {
+                        name: name,
+                        mimeType: mimetype,
+                        parents: ['1rX5J_XGIM45Ey65qJJGui1w6EeKgDPP2'],
+                    },
+                    media: {
+                        mimeType: mimetype,
+                        body: streamifier.createReadStream(buffer),
+                    },
+                })
+                const newContent = new CourseContent({
+                    content_name: driveResponse.data.name,
+                    content_link:
+                        'https://drive.google.com/file/d/' +
+                        driveResponse.data.id +
+                        '/view',
 
-                course_id: req.params.id,
+                    course_id: req.params.id,
+                })
+                await newContent.save()
+                course['contents'].push(newContent.id)
             })
-            await newContent.save()
-            course['contents'].push(newContent.id)
 
             await course.save()
 
@@ -99,19 +101,5 @@ router.post('/courses/:id/contents', async (req, res) => {
         }
     })
 })
-
-// // Create (Remove existing contents) contents for an existing Course
-// router.post(
-//     '/courses/:id/contents',
-//     auth,
-//     CourseController.createContentsForCourse
-// )
-
-// // Update (Add without removing) the contents of an existing Course
-// router.patch(
-//     '/courses/:id/contents',
-//     auth,
-//     CourseController.UpdateContentsForCourse
-// )
 
 module.exports = router

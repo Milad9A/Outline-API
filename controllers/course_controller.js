@@ -4,7 +4,6 @@ const Role = require('../models/role_model')
 const User = require('../models/user_model')
 const credentials = require('../config/credentials.json')
 const { google } = require('googleapis')
-const streamifier = require('streamifier')
 
 const scopes = ['https://www.googleapis.com/auth/drive']
 const auth = new google.auth.JWT(
@@ -114,77 +113,6 @@ const CourseController = {
             res.send(course.categories)
         } catch (error) {
             res.status(500).send()
-        }
-    },
-
-    // // Create (Remove existing contents) contents for an existing Course
-    createContentsForCourse: async (req, res) => {
-        const course = await Course.findById(req.params.id)
-
-        if (!course) return res.status(404).send()
-
-        try {
-            const newContents = req.body
-            let newContentsIds = []
-
-            newContents.forEach(async (content) => {
-                try {
-                    const newContent = new CourseContent({
-                        ...content,
-                        course_id: req.params.id,
-                    })
-                    newContentsIds.push(newContent._id)
-                    await newContent.save()
-                } catch (error) {
-                    res.status(400).send(error)
-                }
-            })
-
-            const oldContentsIds = course['contents']
-            oldContentsIds.forEach(async (id) => {
-                await CourseContent.findByIdAndRemove(id)
-            })
-
-            course['contents'] = newContentsIds
-
-            await course.save()
-            res.status(200).send(course)
-        } catch (error) {
-            res.status(400).send(error)
-        }
-    },
-
-    // Update (Add without removing) the contents of an existing Course
-    UpdateContentsForCourse: async (req, res) => {
-        const course = await Course.findById(req.params.id)
-
-        if (!course) return res.status(404).send()
-
-        try {
-            const newContents = req.body
-            let newContentsIds = []
-
-            newContents.forEach(async (content) => {
-                try {
-                    const newContent = new CourseContent({
-                        ...content,
-                        course_id: req.params.id,
-                    })
-                    newContentsIds.push(newContent._id)
-                    await newContent.save()
-                } catch (error) {
-                    res.status(400).send(error)
-                }
-            })
-
-            newContentsIds.forEach((id) => {
-                course['contents'].push(id)
-            })
-
-            await course.save()
-            res.status(200).send(course)
-        } catch (error) {
-            res.status(400).send(error)
         }
     },
 }
