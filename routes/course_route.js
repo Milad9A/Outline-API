@@ -41,7 +41,7 @@ router.get(
     CourseController.getCourseCategories
 )
 
-router.post('/courses/:id/contents', async (req, res) => {
+router.patch('/courses/:id/contents', async (req, res) => {
     upload(req, res, async function (error) {
         if (error) {
             return res.status(400).send(error)
@@ -61,10 +61,10 @@ router.post('/courses/:id/contents', async (req, res) => {
         const drive = google.drive({ version: 'v3', auth })
 
         try {
-            req.files.forEach(async (file) => {
-                const buffer = await file.buffer
-                const name = file.originalname
-                const mimetype = file.mimetype
+            for (let index = 0; index < req.files.length; index++) {
+                const buffer = await req.files[index].buffer
+                const name = req.files[index].originalname
+                const mimetype = req.files[index].mimetype
                 const driveResponse = await drive.files.create({
                     requestBody: {
                         name: name,
@@ -82,14 +82,12 @@ router.post('/courses/:id/contents', async (req, res) => {
                         'https://drive.google.com/file/d/' +
                         driveResponse.data.id +
                         '/view',
-
                     course_id: req.params.id,
                 })
                 await newContent.save()
                 course['contents'].push(newContent.id)
-            })
-
-            await course.save()
+                await course.save()
+            }
 
             await course.populate('contents').execPopulate()
 

@@ -5,15 +5,6 @@ const User = require('../models/user_model')
 const credentials = require('../config/credentials.json')
 const { google } = require('googleapis')
 
-const scopes = ['https://www.googleapis.com/auth/drive']
-const auth = new google.auth.JWT(
-    credentials.client_email,
-    null,
-    credentials.private_key,
-    scopes
-)
-const drive = google.drive({ version: 'v3', auth })
-
 const CourseController = {
     createCourse: async (req, res) => {
         const user = await User.findById(req.user._id)
@@ -58,6 +49,7 @@ const CourseController = {
             })
 
             if (!course) return res.status(404).send()
+            await course.populate('contents').execPopulate()
             res.send(course)
         } catch (error) {
             res.status(500).send()
