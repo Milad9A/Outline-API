@@ -33,6 +33,12 @@ const CourseController = {
         const user = req.user
         const course = await Course.findById(req.params.id)
 
+        if (!course) {
+            return res.status(401).send({
+                error: 'Course not found.',
+            })
+        }
+
         if (user.purchased_courses.includes(course._id)) {
             return res.status(400).send({
                 error: 'You have already purchased this course',
