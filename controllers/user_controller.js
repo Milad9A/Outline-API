@@ -19,6 +19,7 @@ const UserController = {
             res.status(400).send(error)
         }
     },
+
     createAdminUser: async (req, res) => {
         const updates = Object.keys(req.body)
 
@@ -107,6 +108,12 @@ const UserController = {
 
     getUserMe: async (req, res) => {
         await req.user.populate('tags').execPopulate()
+        await req.user.populate('questions').execPopulate()
+        await req.user.populate('answers').execPopulate()
+        await req.user.populate('articles').execPopulate()
+        await req.user.populate('comments').execPopulate()
+        await req.user.populate('courses').execPopulate()
+        await req.user.populate('purchased_courses').execPopulate()
 
         res.send(req.user)
     },

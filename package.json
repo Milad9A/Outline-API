@@ -25,6 +25,7 @@
     "passport": "^0.4.1",
     "sharp": "^0.27.0",
     "streamifier": "^0.1.1",
+    "superagent": "^6.1.0",
     "validator": "^13.5.2"
   },
   "devDependencies": {

@@ -6,7 +6,9 @@ const router = new express.Router()
 
 router.post('/articles', auth, ArticleController.createArticle)
 
-router.get('/articles', auth, ArticleController.getMyArticles)
+router.get('/articles', ArticleController.getAllArticles)
+
+router.get('/articles/me', auth, ArticleController.getMyArticles)
 
 router.get('/articles/:id', auth, ArticleController.getArticle)
 

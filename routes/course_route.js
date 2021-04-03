@@ -27,7 +27,11 @@ const upload = multer({
 
 router.post('/courses', auth, CourseController.createCourse)
 
-router.get('/courses', auth, CourseController.getMyCourses)
+router.post('/courses/:id/purchase', auth, CourseController.purchaseCourse)
+
+router.get('/courses', CourseController.getAllCourses)
+
+router.get('/courses/me', auth, CourseController.getMyCourses)
 
 router.get('/courses/:id', auth, CourseController.getCourse)
 
@@ -50,6 +54,14 @@ router.patch('/courses/:id/contents', async (req, res) => {
         const course = await Course.findById(req.params.id)
 
         if (!course) return res.status(404).send()
+
+        const user = await User.findById(req.user._id)
+        const userRole = user.role
+
+        if (userRole === Role.BASIC_USER)
+            return res.status(400).send({
+                error: 'You must be an Instructor in order to create courses',
+            })
 
         const scopes = ['https://www.googleapis.com/auth/drive']
         const auth = new google.auth.JWT(

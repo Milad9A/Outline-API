@@ -6,7 +6,9 @@ const router = new express.Router()
 
 router.post('/answers', auth, AnswerController.createAnswer)
 
-router.get('/answers', auth, AnswerController.getMyAnswers)
+router.get('/answers', AnswerController.getAllAnswers)
+
+router.get('/answers/me', auth, AnswerController.getMyAnswers)
 
 router.get('/answers/:id', auth, AnswerController.getAnswer)
 

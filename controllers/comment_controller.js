@@ -6,10 +6,21 @@ const CommentController = {
             ...req.body,
             owner_user_id: req.user._id,
         })
-
         try {
+            await req.user.comments.push(comment)
+            await req.user.save()
             await comment.save()
             res.status(201).send(comment)
+        } catch (error) {
+            res.status(400).send(error)
+        }
+    },
+
+    getAllComments: async (req, res) => {
+        try {
+            const comments = await Comment.find({})
+
+            res.send(comments)
         } catch (error) {
             res.status(400).send(error)
         }
@@ -71,6 +82,10 @@ const CommentController = {
             })
 
             if (!comment) return res.status(404).send()
+
+            const index = req.user.comments.indexOf(comment)
+            if (index > -1) req.user.comments.splice(index, 1)
+            await req.user.save()
 
             res.send(comment)
         } catch (error) {

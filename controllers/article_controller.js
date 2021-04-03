@@ -27,10 +27,22 @@ const ArticleController = {
         })
 
         try {
+            await req.user.articles.push(article)
+            await req.user.save()
             await article.save()
             await article.populate('tags').execPopulate()
 
             res.status(201).send(article)
+        } catch (error) {
+            res.status(400).send(error)
+        }
+    },
+
+    getAllArticles: async (req, res) => {
+        try {
+            const articles = await Article.find({})
+
+            res.send(articles)
         } catch (error) {
             res.status(400).send(error)
         }
@@ -111,6 +123,10 @@ const ArticleController = {
             })
 
             if (!article) return res.status(404).send()
+
+            const index = req.user.articles.indexOf(article)
+            if (index > -1) req.user.articles.splice(index, 1)
+            await req.user.save()
 
             res.send(article)
         } catch (error) {

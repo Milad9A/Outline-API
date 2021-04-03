@@ -27,6 +27,8 @@ const QuestionController = {
         })
 
         try {
+            await req.user.questions.push(question)
+            await req.user.save()
             await question.save()
             await question.populate('tags').execPopulate()
             res.status(201).send(question)
@@ -36,6 +38,16 @@ const QuestionController = {
     },
 
     getAllQuestions: async (req, res) => {
+        try {
+            const questions = await Question.find({})
+
+            res.send(questions)
+        } catch (error) {
+            res.status(400).send(error)
+        }
+    },
+
+    getMyQuestions: async (req, res) => {
         try {
             await req.user.populate('questions').execPopulate()
 
@@ -110,6 +122,10 @@ const QuestionController = {
             })
 
             if (!question) return res.status(404).send()
+
+            const index = req.user.questions.indexOf(question)
+            if (index > -1) req.user.questions.splice(index, 1)
+            await req.user.save()
 
             res.send(question)
         } catch (error) {

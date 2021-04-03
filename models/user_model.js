@@ -44,6 +44,42 @@ const userSchema = new mongoose.Schema(
                 ref: 'Tag',
             },
         ],
+        questions: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Question',
+            },
+        ],
+        answers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Answer',
+            },
+        ],
+        articles: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Article',
+            },
+        ],
+        comments: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Comment',
+            },
+        ],
+        courses: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Course',
+            },
+        ],
+        purchased_courses: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Course',
+            },
+        ],
         avatar: {
             type: Buffer,
         },
@@ -90,36 +126,6 @@ const userSchema = new mongoose.Schema(
         timestamps: true,
     }
 )
-
-userSchema.virtual('questions', {
-    ref: 'Question',
-    localField: '_id',
-    foreignField: 'owner_user_id',
-})
-
-userSchema.virtual('answers', {
-    ref: 'Answer',
-    localField: '_id',
-    foreignField: 'owner_user_id',
-})
-
-userSchema.virtual('articles', {
-    ref: 'Article',
-    localField: '_id',
-    foreignField: 'owner_user_id',
-})
-
-userSchema.virtual('comments', {
-    ref: 'Comment',
-    localField: '_id',
-    foreignField: 'owner_user_id',
-})
-
-userSchema.virtual('courses', {
-    ref: 'Course',
-    localField: '_id',
-    foreignField: 'owner_user_id',
-})
 
 userSchema.methods.toJSON = function () {
     const user = this

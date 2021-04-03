@@ -1,9 +1,7 @@
 const Course = require('../models/course_model')
-const CourseContent = require('../models/course_content_model')
 const Role = require('../models/role_model')
 const User = require('../models/user_model')
-const credentials = require('../config/credentials.json')
-const { google } = require('googleapis')
+const superagent = require('superagent')
 
 const CourseController = {
     createCourse: async (req, res) => {
@@ -22,9 +20,57 @@ const CourseController = {
         })
 
         try {
+            await req.user.courses.push(course)
+            await req.user.save()
             await course.save()
             res.status(201).send(course)
         } catch (error) {
+            res.status(400).send(error)
+        }
+    },
+
+    purchaseCourse: async (req, res) => {
+        const user = req.user
+        const course = await Course.findById(req.params.id)
+
+        if (user.purchased_courses.includes(course._id)) {
+            return res.status(400).send({
+                error: 'You have already purchased this course',
+            })
+        }
+
+        superagent
+            .post('https://banker-app-api.herokuapp.com/payments')
+            .send({
+                url: 'https://outline-app-api.herokuapp.com/courses',
+                amount: course.price,
+                name: 'course purchase',
+            })
+            .set('Authorization', req.body.authorization)
+            .set('accept', 'json')
+            .end(async (err, result) => {
+                if (result.ok) {
+                    user.purchased_courses.push(course)
+                    await user.save()
+                    res.status(201).send()
+                } else if (result.status == 402) {
+                    res.status(402).send({
+                        error:
+                            'Insufficient funds. Unable to complete the payment process.',
+                    })
+                } else {
+                    res.status(result.status).send(err)
+                }
+            })
+    },
+
+    getAllCourses: async (req, res) => {
+        try {
+            const courses = await Course.find({})
+
+            res.send(courses)
+        } catch (error) {
+            console.error(error)
             res.status(400).send(error)
         }
     },
