@@ -76,6 +76,7 @@ const CourseController = {
 
             for (let index = 0; index < courses.length; index++) {
                 await courses[index].populate('contents').execPopulate()
+                await courses[index].populate('owner_user_id').execPopulate()
             }
 
             res.send(courses)
