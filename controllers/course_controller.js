@@ -74,6 +74,10 @@ const CourseController = {
         try {
             const courses = await Course.find({})
 
+            for (let index = 0; index < courses.length; index++) {
+                await courses[index].populate('contents').execPopulate()
+            }
+
             res.send(courses)
         } catch (error) {
             console.error(error)

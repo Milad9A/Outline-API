@@ -6,6 +6,8 @@ const credentials = require('../config/credentials.json')
 const { google } = require('googleapis')
 const streamifier = require('streamifier')
 const CourseContent = require('../models/course_content_model')
+const User = require('../models/user_model')
+const Role = require('../models/role_model')
 
 const CourseController = require('../controllers/course_controller')
 
@@ -45,7 +47,7 @@ router.get(
     CourseController.getCourseCategories
 )
 
-router.patch('/courses/:id/contents', async (req, res) => {
+router.patch('/courses/:id/contents', auth, async (req, res) => {
     upload(req, res, async function (error) {
         if (error) {
             return res.status(400).send(error)
