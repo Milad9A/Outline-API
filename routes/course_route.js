@@ -6,7 +6,15 @@ const CourseController = require('../controllers/course_controller')
 
 const router = express.Router()
 
-router.post('/courses', auth, uploadImageBanner, CourseController.createCourse)
+router.post(
+    '/courses',
+    auth,
+    uploadImageBanner,
+    CourseController.createCourse,
+    (error, req, res, next) => {
+        res.status(400).send({ error: error.message })
+    }
+)
 
 router.post('/courses/:id/purchase', auth, CourseController.purchaseCourse)
 

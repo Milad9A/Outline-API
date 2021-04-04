@@ -2,7 +2,7 @@ const express = require('express')
 const sharp = require('sharp')
 const UserController = require('../controllers/user_controller')
 const auth = require('../middleware/auth')
-const multer = require('multer')
+const uploadImageAvatar = require('../middleware/upload_image_avatar')
 
 const router = new express.Router()
 
@@ -28,34 +28,12 @@ router.delete('/users/me/avatar', auth, UserController.deleteAvatarMe)
 
 router.get('/users/:id/avatar', UserController.getAvatarMe)
 
-const upload = multer({
-    limits: {
-        fileSize: 1000000,
-    },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload an image'))
-        }
-        cb(undefined, true)
-    },
-})
-
 router.post(
     '/users/me/avatar',
     auth,
-    upload.single('avatar'),
-    async (req, res) => {
-        const buffer = await sharp(req.file.buffer)
-            .resize({
-                width: 250,
-                height: 250,
-            })
-            .png()
-            .toBuffer()
-        req.user.avatar = buffer
-        await req.user.save()
-        res.send()
-    },
+
+    uploadImageAvatar,
+    UserController.uploadAvatar,
     (error, req, res, next) => {
         res.status(400).send({ error: error.message })
     }

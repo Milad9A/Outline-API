@@ -18,22 +18,24 @@ const CourseController = {
                 error: 'You must be an Instructor in order to create courses',
             })
 
-        const port = process.env.PORT || 3000
-
-        let path
-
-        if (process.env.NODE_ENV === 'development') {
-            path = 'http://localhost:' + port + '/'
-        } else {
-            path = 'https://outline-app-api.herokuapp.com/'
-        }
-
         const course = new Course({
             ...req.body,
             owner_user_id: req.user._id,
-            banner: path + req.file.path,
             contents: [],
         })
+
+        if (req.file) {
+            const port = process.env.PORT || 3000
+
+            let path
+
+            if (process.env.NODE_ENV === 'development') {
+                path = 'http://localhost:' + port + '/'
+            } else {
+                path = 'https://outline-app-api.herokuapp.com/'
+            }
+            course.banner = path + req.file.path
+        }
 
         try {
             await req.user.courses.push(course)

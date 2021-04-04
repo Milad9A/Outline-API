@@ -1,5 +1,6 @@
 const User = require('../models/user_model')
 const Role = require('../models/role_model')
+const sharp = require('sharp')
 
 const UserController = {
     createBasicUser: async (req, res) => {
@@ -174,6 +175,22 @@ const UserController = {
         } catch (error) {
             res.status(404).send()
         }
+    },
+
+    uploadAvatar: async (req, res) => {
+        const port = process.env.PORT || 3000
+
+        let path
+
+        if (process.env.NODE_ENV === 'development') {
+            path = 'http://localhost:' + port + '/'
+        } else {
+            path = 'https://outline-app-api.herokuapp.com/'
+        }
+
+        req.user.avatar = path + req.file.path
+        await req.user.save()
+        res.send()
     },
 }
 

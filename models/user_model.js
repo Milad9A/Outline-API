@@ -81,7 +81,8 @@ const userSchema = new mongoose.Schema(
             },
         ],
         avatar: {
-            type: Buffer,
+            type: String,
+            default: 'https://avatarfiles.alphacoders.com/103/103808.jpg',
         },
         reputation: {
             type: Number,
@@ -133,7 +134,6 @@ userSchema.methods.toJSON = function () {
 
     delete userObject.password
     delete userObject.tokens
-    delete userObject.avatar
 
     return userObject
 }

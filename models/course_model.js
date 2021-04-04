@@ -46,7 +46,7 @@ const courseSchema = new mongoose.Schema(
         },
         banner: {
             type: String,
-            default: 'yoyo',
+            default: 'https://wallpapercave.com/wp/wp2200994.png',
         },
         contents: [
             {
