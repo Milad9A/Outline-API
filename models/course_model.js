@@ -44,6 +44,10 @@ const courseSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        banner: {
+            type: String,
+            default: 'yoyo',
+        },
         contents: [
             {
                 type: mongoose.Schema.Types.ObjectId,

@@ -2,6 +2,7 @@ const dotenv = require('dotenv')
 const express = require('express')
 const morgan = require('morgan')
 const connectDB = require('./config/db')
+const bodyParser = require('body-parser')
 
 // Load config
 dotenv.config({
@@ -27,6 +28,9 @@ app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Headers', '*')
     next()
 })
+
+// Able to GET images inside upload folder
+app.use('/uploads', express.static('./uploads'))
 
 // Routes
 app.use(require('./routes/user_route'))
