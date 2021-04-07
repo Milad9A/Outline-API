@@ -31,7 +31,6 @@ router.get('/users/:id/avatar', UserController.getAvatarMe)
 router.post(
     '/users/me/avatar',
     auth,
-
     uploadImageAvatar,
     UserController.uploadAvatar,
     (error, req, res, next) => {

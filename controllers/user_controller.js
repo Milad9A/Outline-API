@@ -178,19 +178,23 @@ const UserController = {
     },
 
     uploadAvatar: async (req, res) => {
-        const port = process.env.PORT || 3000
+        const cloudinary = require('cloudinary').v2
+        cloudinary.config({
+            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+            api_key: process.env.CLOUDINARY_API_KEY,
+            api_secret: process.env.CLOUDINARY_SECRET,
+        })
 
-        let path
+        const path = req.file.path
 
-        if (process.env.NODE_ENV === 'development') {
-            path = 'http://localhost:' + port + '/'
-        } else {
-            path = 'https://outline-app-api.herokuapp.com/'
-        }
-
-        req.user.avatar = path + req.file.path
-        await req.user.save()
-        res.send()
+        cloudinary.uploader.upload(path, async function (err, image) {
+            if (err) return res.status(400).send(err)
+            const fs = require('fs')
+            fs.unlinkSync(path)
+            req.user.avatar = image.url
+            await req.user.save()
+            res.send(req.user.avatar)
+        })
     },
 }
 
