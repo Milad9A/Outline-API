@@ -115,9 +115,14 @@ const CourseController = {
 
     getMyCourses: async (req, res) => {
         try {
-            await req.user.populate('courses').execPopulate()
+            const courses = await req.user.populate('courses').execPopulate()
 
-            res.send(req.user.courses)
+            for (let index = 0; index < courses.length; index++) {
+                await courses[index].populate('contents').execPopulate()
+                await courses[index].populate('owner_user_id').execPopulate()
+            }
+
+            res.send(courses)
         } catch (error) {
             res.status(400).send(error)
         }
@@ -125,9 +130,16 @@ const CourseController = {
 
     getPurchasedCourses: async (req, res) => {
         try {
-            await req.user.populate('purchased_courses').execPopulate()
+            const courses = await req.user
+                .populate('purchased_courses')
+                .execPopulate()
 
-            res.send(req.user.purchased_courses)
+            for (let index = 0; index < courses.length; index++) {
+                await courses[index].populate('contents').execPopulate()
+                await courses[index].populate('owner_user_id').execPopulate()
+            }
+
+            res.send(courses)
         } catch (error) {
             res.status(400).send(error)
         }
