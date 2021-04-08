@@ -193,7 +193,7 @@ const UserController = {
             if (err) return res.status(400).send(err)
             const fs = require('fs')
             fs.unlinkSync(path)
-            req.user.avatar = image.url
+            req.user.avatar = image.secure_url
             await req.user.save()
             res.send({ avatar: req.user.avatar })
         })

@@ -41,7 +41,7 @@ const CourseController = {
                         if (err) return res.status(400).send(err)
                         const fs = require('fs')
                         fs.unlinkSync(path)
-                        course.banner = image.url
+                        course.banner = image.secure_url
                         await course.save()
                     }
                 )
