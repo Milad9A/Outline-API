@@ -115,7 +115,9 @@ const CourseController = {
 
     getMyCourses: async (req, res) => {
         try {
-            const courses = await req.user.populate('courses').execPopulate()
+            await req.user.populate('courses').execPopulate()
+
+            const courses = req.user.courses
 
             for (let index = 0; index < courses.length; index++) {
                 await courses[index].populate('contents').execPopulate()
@@ -130,9 +132,9 @@ const CourseController = {
 
     getPurchasedCourses: async (req, res) => {
         try {
-            const courses = await req.user
-                .populate('purchased_courses')
-                .execPopulate()
+            await req.user.populate('purchased_courses').execPopulate()
+
+            const courses = req.user.purchased_courses
 
             for (let index = 0; index < courses.length; index++) {
                 await courses[index].populate('contents').execPopulate()
