@@ -22,6 +22,8 @@ router.get('/courses', CourseController.getAllCourses)
 
 router.get('/courses/me', auth, CourseController.getMyCourses)
 
+router.get('/courses/purchased', auth, CourseController.getPurchasedCourses)
+
 router.get('/courses/:id', auth, CourseController.getCourse)
 
 router.patch('/courses/:id', auth, CourseController.updateCourse)

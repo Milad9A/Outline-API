@@ -123,6 +123,16 @@ const CourseController = {
         }
     },
 
+    getPurchasedCourses: async (req, res) => {
+        try {
+            await req.user.populate('purchased_courses').execPopulate()
+
+            res.send(req.user.purchased_courses)
+        } catch (error) {
+            res.status(400).send(error)
+        }
+    },
+
     getCourse: async (req, res) => {
         const _id = req.params.id
 
