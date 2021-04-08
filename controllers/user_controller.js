@@ -1,6 +1,5 @@
 const User = require('../models/user_model')
 const Role = require('../models/role_model')
-const sharp = require('sharp')
 
 const UserController = {
     createBasicUser: async (req, res) => {
@@ -178,6 +177,9 @@ const UserController = {
     },
 
     uploadAvatar: async (req, res) => {
+        if (!req.file)
+            return res.status(400).send({ error: 'No file was provided' })
+
         const cloudinary = require('cloudinary').v2
         cloudinary.config({
             cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -193,7 +195,7 @@ const UserController = {
             fs.unlinkSync(path)
             req.user.avatar = image.url
             await req.user.save()
-            res.send(req.user.avatar)
+            res.send({ avatar: req.user.avatar })
         })
     },
 }
