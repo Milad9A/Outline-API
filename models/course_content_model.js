@@ -18,6 +18,10 @@ const courseContentSchema = new mongoose.Schema({
         type: String,
         default: 'video',
     },
+    video_duration_in_seconds: {
+        type: String,
+        default: '0',
+    },
 })
 
 const CourseContent = mongoose.model('CourseContent', courseContentSchema)

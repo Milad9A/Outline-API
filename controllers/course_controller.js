@@ -2,6 +2,7 @@ const Course = require('../models/course_model')
 const Role = require('../models/role_model')
 const User = require('../models/user_model')
 const superagent = require('superagent')
+const { getVideoDurationInSeconds } = require('get-video-duration')
 const uploadVideoContent = require('../middleware/upload_video_content')
 const credentials = require('../config/credentials.json')
 const { google } = require('googleapis')
@@ -248,6 +249,14 @@ const CourseController = {
                 for (let index = 0; index < req.files.length; index++) {
                     const buffer = await req.files[index].buffer
                     const name = req.files[index].originalname
+                    let durationInSeconds
+
+                    getVideoDurationInSeconds(
+                        streamifier.createReadStream(buffer)
+                    ).then((duration) => {
+                        durationInSeconds = duration
+                    })
+
                     const mimetype = req.files[index].mimetype
                     const driveResponse = await drive.files.create({
                         requestBody: {
@@ -267,6 +276,7 @@ const CourseController = {
                             driveResponse.data.id +
                             '/view',
                         course_id: req.params.id,
+                        video_duration_in_seconds: durationInSeconds,
                     })
                     await newContent.save()
                     course['contents'].push(newContent.id)
