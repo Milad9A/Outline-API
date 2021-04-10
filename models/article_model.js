@@ -24,6 +24,10 @@ const articleSchema = new mongoose.Schema(
                     throw new Error('View Count must be a positive number')
             },
         },
+        banner: {
+            type: String,
+            default: 'https://wallpapercave.com/wp/wp2200994.png',
+        },
         tags: [
             {
                 type: mongoose.Schema.Types.ObjectId,

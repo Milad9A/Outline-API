@@ -1,10 +1,19 @@
 const express = require('express')
-const ArticleController = require('../controllers/article_controller')
 const auth = require('../middleware/auth')
+const uploadImageBanner = require('../middleware/upload_image_banner')
+const ArticleController = require('../controllers/article_controller')
 
-const router = new express.Router()
+const router = express.Router()
 
-router.post('/articles', auth, ArticleController.createArticle)
+router.post(
+    '/articles',
+    auth,
+    uploadImageBanner,
+    ArticleController.createArticle,
+    (error, req, res, next) => {
+        res.status(400).send({ error: error.message })
+    }
+)
 
 router.get('/articles', ArticleController.getAllArticles)
 

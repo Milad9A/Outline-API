@@ -27,6 +27,28 @@ const ArticleController = {
         })
 
         try {
+            if (req.file) {
+                const cloudinary = require('cloudinary').v2
+                cloudinary.config({
+                    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+                    api_key: process.env.CLOUDINARY_API_KEY,
+                    api_secret: process.env.CLOUDINARY_SECRET,
+                })
+
+                const path = req.file.path
+
+                await cloudinary.uploader.upload(
+                    path,
+                    async function (err, image) {
+                        if (err) return res.status(400).send(err)
+                        const fs = require('fs')
+                        fs.unlinkSync(path)
+                        article.banner = image.secure_url
+                        await course.save()
+                    }
+                )
+            }
+
             await req.user.articles.push(article)
             await req.user.save()
             await article.save()

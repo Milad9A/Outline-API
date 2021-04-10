@@ -1,7 +1,6 @@
 const express = require('express')
 const auth = require('../middleware/auth')
 const uploadImageBanner = require('../middleware/upload_image_banner')
-
 const CourseController = require('../controllers/course_controller')
 
 const router = express.Router()
