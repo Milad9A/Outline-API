@@ -118,6 +118,20 @@ const UserController = {
         res.send(req.user)
     },
 
+    getAllUsersPublicInfo: async (req, res) => {
+        try {
+            const users = await User.find({}).select({
+                email: 1,
+                name: 1,
+                avatar: 1,
+            })
+
+            res.send(users)
+        } catch (error) {
+            res.status(400).send(error)
+        }
+    },
+
     updateUserMe: async (req, res) => {
         const updates = Object.keys(req.body)
         const allowedUpdates = [

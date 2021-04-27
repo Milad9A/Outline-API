@@ -20,6 +20,8 @@ router.post('/users/logoutAll', auth, UserController.logoutUserFromAll)
 
 router.get('/users/me', auth, UserController.getUserMe)
 
+router.get('/users/public-info', UserController.getAllUsersPublicInfo)
+
 router.patch('/users/me', auth, UserController.updateUserMe)
 
 router.delete('/users/me', auth, UserController.deleteUserMe)
