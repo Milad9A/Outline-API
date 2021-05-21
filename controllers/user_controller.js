@@ -76,6 +76,9 @@ const UserController = {
             const token = await user.generateAuthToken()
 
             await user.populate('tags').execPopulate()
+            await user.populate('questions').execPopulate()
+            await user.populate('questions.tags').execPopulate()
+            await user.populate('articles').execPopulate()
 
             res.send({ user, token })
         } catch (error) {
@@ -109,8 +112,10 @@ const UserController = {
     getUserMe: async (req, res) => {
         await req.user.populate('tags').execPopulate()
         await req.user.populate('questions').execPopulate()
+        await req.user.populate('questions.tags').execPopulate()
         await req.user.populate('answers').execPopulate()
         await req.user.populate('articles').execPopulate()
+        await req.user.populate('articles.tags').execPopulate()
         await req.user.populate('comments').execPopulate()
         await req.user.populate('courses').execPopulate()
         await req.user.populate('purchased_courses').execPopulate()
