@@ -78,13 +78,13 @@ const ArticleController = {
         try {
             await req.user.populate('articles').execPopulate()
 
-            let articles = req.user.article
+            let articles = req.user.articles
 
             for (let index = 0; index < articles.length; index++) {
                 await articles[index].populate('tags').execPopulate()
             }
 
-            res.send(req.user.articles)
+            res.send(articles)
         } catch (error) {
             res.status(400).send(error)
         }
