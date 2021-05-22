@@ -104,33 +104,6 @@ const CourseController = {
             for (let index = 0; index < courses.length; index++) {
                 await courses[index].populate('contents').execPopulate()
                 await courses[index].populate('owner_user_id').execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.tags')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.questions')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.questions.tags')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.answers')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.articles')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.articles.tags')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.comments')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.courses')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.purchased_courses')
-                    .execPopulate()
             }
 
             res.send(courses)
@@ -149,33 +122,6 @@ const CourseController = {
             for (let index = 0; index < courses.length; index++) {
                 await courses[index].populate('contents').execPopulate()
                 await courses[index].populate('owner_user_id').execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.tags')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.questions')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.questions.tags')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.answers')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.articles')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.articles.tags')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.comments')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.courses')
-                    .execPopulate()
-                await courses[index]
-                    .populate('owner_user_id.purchased_courses')
-                    .execPopulate()
             }
 
             res.send(courses)
