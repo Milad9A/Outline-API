@@ -64,6 +64,10 @@ const ArticleController = {
         try {
             const articles = await Article.find({})
 
+            for (let index = 0; index < articles.length; index++) {
+                await articles[index].populate('tags').execPopulate()
+            }
+
             res.send(articles)
         } catch (error) {
             res.status(400).send(error)
@@ -73,6 +77,12 @@ const ArticleController = {
     getMyArticles: async (req, res) => {
         try {
             await req.user.populate('articles').execPopulate()
+
+            let articles = req.user.article
+
+            for (let index = 0; index < articles.length; index++) {
+                await articles[index].populate('tags').execPopulate()
+            }
 
             res.send(req.user.articles)
         } catch (error) {
@@ -90,6 +100,9 @@ const ArticleController = {
             })
 
             if (!article) return res.status(404).send()
+
+            await article.populate('tags').execPopulate()
+
             res.send(article)
         } catch (error) {
             res.status(500).send()

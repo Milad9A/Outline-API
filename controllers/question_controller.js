@@ -41,6 +41,10 @@ const QuestionController = {
         try {
             const questions = await Question.find({})
 
+            for (let index = 0; index < questions.length; index++) {
+                await questions[index].populate('tags').execPopulate()
+            }
+
             res.send(questions)
         } catch (error) {
             res.status(400).send(error)
@@ -73,6 +77,9 @@ const QuestionController = {
             })
 
             if (!question) return res.status(404).send()
+
+            await question.populate('tags').execPopulate()
+
             res.send(question)
         } catch (error) {
             res.status(500).send()
