@@ -51,7 +51,13 @@ const QuestionController = {
         try {
             await req.user.populate('questions').execPopulate()
 
-            res.send(req.user.questions)
+            let questions = req.user.questions
+
+            for (let index = 0; index < questions.length; index++) {
+                await questions[index].populate('tags').execPopulate()
+            }
+
+            res.send(questions)
         } catch (error) {
             res.status(400).send(error)
         }
