@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
+const Role = require('./role_model')
+const InvalidEmailOrPasswordError = require('../errors/invalid_email_or_password_error')
 
 const userSchema = new mongoose.Schema(
     {
@@ -9,6 +11,10 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
             trim: true,
+        },
+        role: {
+            type: Role,
+            default: Role.BASIC_USER,
         },
         email: {
             type: String,
@@ -32,8 +38,51 @@ const userSchema = new mongoose.Schema(
             trim: true,
             default: "I'm a human :)",
         },
+        tags: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Tag',
+            },
+        ],
+        questions: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Question',
+            },
+        ],
+        answers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Answer',
+            },
+        ],
+        articles: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Article',
+            },
+        ],
+        comments: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Comment',
+            },
+        ],
+        courses: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Course',
+            },
+        ],
+        purchased_courses: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Course',
+            },
+        ],
         avatar: {
-            type: Buffer,
+            type: String,
+            default: 'https://avatarfiles.alphacoders.com/103/103808.jpg',
         },
         reputation: {
             type: Number,
@@ -43,28 +92,12 @@ const userSchema = new mongoose.Schema(
                     throw new Error('Reputation must be a positive number')
             },
         },
-        views: {
+        accept_rate: {
             type: Number,
             default: 0,
             validate(value) {
                 if (value < 0)
-                    throw new Error('Views must be a positive number')
-            },
-        },
-        upVotes: {
-            type: Number,
-            default: 0,
-            validate(value) {
-                if (value < 0)
-                    throw new Error('UpVotes must be a positive number')
-            },
-        },
-        downVotes: {
-            type: Number,
-            default: 0,
-            validate(value) {
-                if (value < 0)
-                    throw new Error('DownVotes must be a positive number')
+                    throw new Error('Accept rate must be a positive number')
             },
         },
         tokens: [
@@ -75,13 +108,25 @@ const userSchema = new mongoose.Schema(
                 },
             },
         ],
+        badge_counts: {
+            bronze: {
+                type: 'Number',
+                default: 0,
+            },
+            silver: {
+                type: 'Number',
+                default: 0,
+            },
+            gold: {
+                type: 'Number',
+                default: 0,
+            },
+        },
     },
     {
         timestamps: true,
     }
 )
-
-// TODO: Add user references
 
 userSchema.methods.toJSON = function () {
     const user = this
@@ -89,7 +134,6 @@ userSchema.methods.toJSON = function () {
 
     delete userObject.password
     delete userObject.tokens
-    delete userObject.avatar
 
     return userObject
 }
@@ -106,10 +150,12 @@ userSchema.methods.generateAuthToken = async function () {
 
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
-    if (!user) throw new Error('Unable to login')
+    if (!user)
+        throw new InvalidEmailOrPasswordError('Invalid Email or Password')
 
     const isMatch = await bcrypt.compare(password, user.password)
-    if (!isMatch) throw Error('Unable to login')
+    if (!isMatch)
+        throw new InvalidEmailOrPasswordError('Invalid Email or Password')
 
     return user
 }
