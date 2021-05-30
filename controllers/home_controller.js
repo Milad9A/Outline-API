@@ -19,7 +19,7 @@ const HomeController = {
                 return {
                     date: article.updatedAt,
                     type: 'article',
-                    article,
+                    post: article,
                 }
             })
 
@@ -41,7 +41,7 @@ const HomeController = {
                 return {
                     date: question.updatedAt,
                     type: 'question',
-                    question,
+                    post: question,
                 }
             })
 
