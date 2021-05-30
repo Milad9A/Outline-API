@@ -86,6 +86,7 @@ const ArticleController = {
 
             res.send(articles)
         } catch (error) {
+            console.log(error)
             res.status(400).send(error)
         }
     },
