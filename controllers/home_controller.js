@@ -1,4 +1,5 @@
 const HomeController = {
+    // TODO Use the articles and questions from the user's tags instead of the user's own articles and questions
     getNewsFeed: async (req, res) => {
         try {
             await req.user
@@ -13,6 +14,9 @@ const HomeController = {
 
             for (let index = 0; index < req.user.articles.length; index++) {
                 await req.user.articles[index].populate('tags').execPopulate()
+                await req.user.articles[index]
+                    .populate('owner_user_id')
+                    .execPopulate()
             }
 
             let articles = req.user.articles.map((article) => {
@@ -35,6 +39,9 @@ const HomeController = {
 
             for (let index = 0; index < req.user.questions.length; index++) {
                 await req.user.questions[index].populate('tags').execPopulate()
+                await req.user.questions[index]
+                    .populate('owner_user_id')
+                    .execPopulate()
             }
 
             let questions = req.user.questions.map((question) => {
