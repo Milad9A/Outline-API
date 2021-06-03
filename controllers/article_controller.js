@@ -53,6 +53,7 @@ const ArticleController = {
             await req.user.save()
             await article.save()
             await article.populate('tags').execPopulate()
+            await article.populate('owner_user_id').execPopulate()
 
             res.status(201).send(article)
         } catch (error) {
@@ -66,6 +67,7 @@ const ArticleController = {
 
             for (let index = 0; index < articles.length; index++) {
                 await articles[index].populate('tags').execPopulate()
+                await articles[index].populate('owner_user_id').execPopulate()
             }
 
             res.send(articles)
@@ -82,6 +84,7 @@ const ArticleController = {
 
             for (let index = 0; index < articles.length; index++) {
                 await articles[index].populate('tags').execPopulate()
+                await articles[index].populate('owner_user_id').execPopulate()
             }
 
             res.send(articles)
@@ -103,6 +106,7 @@ const ArticleController = {
             if (!article) return res.status(404).send()
 
             await article.populate('tags').execPopulate()
+            await article.populate('owner_user_id').execPopulate()
 
             res.send(article)
         } catch (error) {
@@ -144,6 +148,9 @@ const ArticleController = {
             })
 
             await article.save()
+
+            await article.populate('tags').execPopulate()
+            await article.populate('owner_user_id').execPopulate()
 
             res.send(article)
         } catch (error) {
