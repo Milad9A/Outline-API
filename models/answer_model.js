@@ -24,9 +24,6 @@ const answerSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
-        last_activity_date: {
-            type: Date,
-        },
     },
     {
         timestamps: true,

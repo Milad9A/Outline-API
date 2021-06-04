@@ -46,14 +46,6 @@ const questionSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
-        last_activity_date: {
-            type: Date,
-            default: Date.now,
-        },
-        creation_date: {
-            type: Date,
-            default: Date.now,
-        },
     },
     {
         timestamps: true,

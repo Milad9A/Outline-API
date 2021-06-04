@@ -8,6 +8,7 @@ const HomeController = {
                     options: {
                         limit: parseInt(req.query.limit),
                         skip: parseInt(req.query.skip),
+                        sort: { updatedAt: -1 },
                     },
                 })
                 .execPopulate()
@@ -33,6 +34,7 @@ const HomeController = {
                     options: {
                         limit: parseInt(req.query.limit),
                         skip: parseInt(req.query.skip),
+                        sort: { updatedAt: 1 },
                     },
                 })
                 .execPopulate()
@@ -53,8 +55,6 @@ const HomeController = {
             })
 
             let feed = articles.concat(questions)
-
-            feed = feed.sort((a, b) => b.date - a.date)
 
             res.send(feed)
         } catch (error) {
