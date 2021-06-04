@@ -55,6 +55,7 @@ const HomeController = {
             })
 
             let feed = articles.concat(questions)
+            feed = feed.sort((a, b) => b.date - a.date)
 
             res.send(feed)
         } catch (error) {
