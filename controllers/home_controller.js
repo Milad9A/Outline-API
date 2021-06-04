@@ -34,7 +34,7 @@ const HomeController = {
                     options: {
                         limit: parseInt(req.query.limit),
                         skip: parseInt(req.query.skip),
-                        sort: { updatedAt: 1 },
+                        sort: { updatedAt: -1 },
                     },
                 })
                 .execPopulate()
