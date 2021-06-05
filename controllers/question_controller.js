@@ -44,18 +44,12 @@ const QuestionController = {
                                     .includes(tag)
                             )
                         ) {
-                            const thisUser = await users[index]
-                                .populate('tags')
-                                .execPopulate()
-
-                            const tagName = thisUser.tags[0].name
-
                             const message = {
                                 notification: {
                                     title: 'Outline',
                                     body: `${req.user.name} asked a new question about that a tag you follow!`,
                                 },
-                                topic: tagName,
+                                topic: users[index].tags[0],
                             }
 
                             FCMHelper.sendPushNotification(message)
