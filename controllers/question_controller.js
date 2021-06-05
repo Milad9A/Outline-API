@@ -32,6 +32,39 @@ const QuestionController = {
             await question.save()
             await question.populate('tags').execPopulate()
             await question.populate('owner_user_id').execPopulate()
+
+            res.on('finish', async () => {
+                if (question.tags.length > 0) {
+                    const users = await User.find({})
+                    for (let index = 0; index < users.length; index++) {
+                        if (
+                            users[index].tags.some((tag) =>
+                                question.tags
+                                    .map((questionTag) => questionTag._id)
+                                    .includes(tag)
+                            )
+                        ) {
+                            const thisUser = await users[index]
+                                .populate('tags')
+                                .execPopulate()
+
+                            const tagName = thisUser.tags[0].name
+
+                            const message = {
+                                notification: {
+                                    title: 'Outline',
+                                    body: `${req.user.name} asked a new question about that a tag you follow!`,
+                                },
+                                topic: tagName,
+                            }
+
+                            FCMHelper.sendPushNotification(message)
+                            break
+                        }
+                    }
+                }
+            })
+
             res.status(201).send(question)
         } catch (error) {
             res.status(400).send(error)

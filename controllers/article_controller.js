@@ -1,5 +1,7 @@
 const Article = require('../models/article_model')
 const Tag = require('../models/tag_model')
+const User = require('../models/user_model')
+const FCMHelper = require('../helpers/fcm_helper')
 
 const ArticleController = {
     createArticle: async (req, res) => {
@@ -55,7 +57,40 @@ const ArticleController = {
             await article.populate('tags').execPopulate()
             await article.populate('owner_user_id').execPopulate()
 
+            res.on('finish', async () => {
+                if (article.tags.length > 0) {
+                    const users = await User.find({})
+                    for (let index = 0; index < users.length; index++) {
+                        if (
+                            users[index].tags.some((tag) =>
+                                article.tags
+                                    .map((articleTag) => articleTag._id)
+                                    .includes(tag)
+                            )
+                        ) {
+                            const thisUser = await users[index]
+                                .populate('tags')
+                                .execPopulate()
+
+                            const tagName = thisUser.tags[0].name
+
+                            const message = {
+                                notification: {
+                                    title: 'Outline',
+                                    body: `${req.user.name} posted a new article about that a tag you follow!`,
+                                },
+                                topic: tagName,
+                            }
+
+                            FCMHelper.sendPushNotification(message)
+                            break
+                        }
+                    }
+                }
+            })
+
             res.status(201).send(article)
+            res.end()
         } catch (error) {
             res.status(400).send(error)
         }
