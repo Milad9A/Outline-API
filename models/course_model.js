@@ -57,6 +57,7 @@ const courseSchema = new mongoose.Schema(
     },
     {
         timestamps: true,
+        typeKey: '$type',
     }
 )
 

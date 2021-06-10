@@ -46,7 +46,7 @@ const ArticleController = {
                         const fs = require('fs')
                         fs.unlinkSync(path)
                         article.banner = image.secure_url
-                        await course.save()
+                        await article.save()
                     }
                 )
             }
