@@ -151,10 +151,7 @@ const CourseController = {
         const _id = req.params.id
 
         try {
-            const course = await Course.findOne({
-                _id,
-                owner_user_id: req.user._id,
-            })
+            const course = await Course.findOne({ _id })
 
             if (!course) return res.status(404).send()
             await course.populate('contents').execPopulate()

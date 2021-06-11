@@ -41,10 +41,7 @@ const AnswerController = {
         const _id = req.params.id
 
         try {
-            const answer = await Answer.findOne({
-                _id,
-                owner_user_id: req.user._id,
-            })
+            const answer = await Answer.findOne({ _id })
 
             if (!answer) return res.status(404).send()
 

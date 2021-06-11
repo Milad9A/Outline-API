@@ -40,10 +40,7 @@ const CommentController = {
         const _id = req.params.id
 
         try {
-            const comment = await Comment.findOne({
-                _id,
-                owner_user_id: req.user._id,
-            })
+            const comment = await Comment.findOne({ _id })
 
             if (!comment) return res.status(404).send()
 

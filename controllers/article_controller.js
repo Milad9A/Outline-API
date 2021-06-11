@@ -128,10 +128,7 @@ const ArticleController = {
         const _id = req.params.id
 
         try {
-            const article = await Article.findOne({
-                _id,
-                owner_user_id: req.user._id,
-            })
+            const article = await Article.findOne({ _id })
 
             if (!article) return res.status(404).send()
 

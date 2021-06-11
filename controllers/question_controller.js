@@ -102,10 +102,7 @@ const QuestionController = {
         const _id = req.params.id
 
         try {
-            const question = await Question.findOne({
-                _id,
-                owner_user_id: req.user._id,
-            })
+            const question = await Question.findOne({ _id })
 
             if (!question) return res.status(404).send()
 

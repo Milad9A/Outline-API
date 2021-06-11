@@ -26,9 +26,8 @@ const CategoryController = {
         const _id = req.params.id
 
         try {
-            const category = await Category.findOne({
-                _id,
-            })
+            const category = await Category.findOne({ _id })
+
             if (!category) return res.status(404).send()
             res.send(category)
         } catch (error) {

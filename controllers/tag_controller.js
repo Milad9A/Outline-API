@@ -26,9 +26,8 @@ const TagController = {
         const _id = req.params.id
 
         try {
-            const tag = await Tag.findOne({
-                _id,
-            })
+            const tag = await Tag.findOne({ _id })
+
             if (!tag) return res.status(404).send()
             res.send(tag)
         } catch (error) {
