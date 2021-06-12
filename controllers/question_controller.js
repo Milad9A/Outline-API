@@ -1,4 +1,5 @@
 const Question = require('../models/question_model')
+const User = require('../models/user_model')
 const Tag = require('../models/tag_model')
 
 const QuestionController = {
@@ -48,13 +49,12 @@ const QuestionController = {
                             const message = {
                                 notification: {
                                     title: 'Outline',
-                                    body: `${req.user.name} asked a new question about that a tag you follow!`,
+                                    body: `${req.user.name} asked a new question about a tag you follow!`,
                                 },
                                 topic: tagId,
                             }
 
                             FCMHelper.sendPushNotification(message)
-                            break
                         }
                     }
                 }

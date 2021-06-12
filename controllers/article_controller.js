@@ -72,13 +72,12 @@ const ArticleController = {
                             const message = {
                                 notification: {
                                     title: 'Outline',
-                                    body: `${req.user.name} posted a new article about that a tag you follow!`,
+                                    body: `${req.user.name} posted a new article about a tag you follow!`,
                                 },
                                 topic: tagId,
                             }
 
                             FCMHelper.sendPushNotification(message)
-                            break
                         }
                     }
                 }
