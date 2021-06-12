@@ -2,7 +2,6 @@ const dotenv = require('dotenv')
 const express = require('express')
 const morgan = require('morgan')
 const connectDB = require('./config/db')
-const bodyParser = require('body-parser')
 
 // Load config
 dotenv.config({
@@ -44,6 +43,7 @@ app.use(require('./routes/comment_route'))
 app.use(require('./routes/course_route'))
 app.use(require('./routes/category_route'))
 app.use(require('./routes/home_route'))
+app.use(require('./routes/video_call_route'))
 
 const PORT = process.env.PORT || 3000
 
