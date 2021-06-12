@@ -200,6 +200,27 @@ const UserController = {
             res.send({ avatar: req.user.avatar })
         })
     },
+
+    updateMyFCMToken: async (req, res) => {
+        const new_fcm_token = req.body.fcm_token
+
+        if (!new_fcm_token)
+            return res
+                .status(400)
+                .json({ error: 'FCM token was not provided!' })
+
+        try {
+            req.user.fcm_token = new_fcm_token
+
+            await req.user.save()
+
+            console.log(req.user)
+
+            res.send()
+        } catch (error) {
+            res.status(400).send(error)
+        }
+    },
 }
 
 module.exports = UserController

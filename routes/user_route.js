@@ -24,6 +24,8 @@ router.get('/users/public-info', UserController.getAllUsersPublicInfo)
 
 router.patch('/users/me', auth, UserController.updateUserMe)
 
+router.patch('/users/update-fcm-token', auth, UserController.updateMyFCMToken)
+
 router.delete('/users/me', auth, UserController.deleteUserMe)
 
 router.delete('/users/me/avatar', auth, UserController.deleteAvatarMe)

@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema(
             minlength: 7,
             trim: true,
         },
+        fcm_token: {
+            type: String,
+            default: '',
+        },
         aboutMe: {
             type: String,
             trim: true,
@@ -134,6 +138,7 @@ userSchema.methods.toJSON = function () {
 
     delete userObject.password
     delete userObject.tokens
+    delete userObject.fcm_token
 
     return userObject
 }
