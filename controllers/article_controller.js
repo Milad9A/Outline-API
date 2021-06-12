@@ -68,12 +68,16 @@ const ArticleController = {
                                     .includes(tag)
                             )
                         ) {
+                            var token = ''
+                            if (users[index].fcm_token) {
+                                token = users[index].fcm_token
+                            }
                             const message = {
-                                token: users[index].fcm_token,
                                 notification: {
                                     title: 'Outline',
                                     body: `${req.user.name} posted a new article about a tag you follow!`,
                                 },
+                                token: token,
                             }
 
                             FCMHelper.sendPushNotification(message)
