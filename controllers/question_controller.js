@@ -46,13 +46,12 @@ const QuestionController = {
                                     .includes(tag)
                             )
                         ) {
-                            const tagId = users[index].tags[0].toString()
                             const message = {
+                                token: users[index].fcm_token,
                                 notification: {
                                     title: 'Outline',
                                     body: `${req.user.name} asked a new question about a tag you follow!`,
                                 },
-                                topic: tagId,
                             }
 
                             FCMHelper.sendPushNotification(message)

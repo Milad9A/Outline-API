@@ -214,8 +214,6 @@ const UserController = {
 
             await req.user.save()
 
-            console.log(req.user)
-
             res.send()
         } catch (error) {
             res.status(400).send(error)
