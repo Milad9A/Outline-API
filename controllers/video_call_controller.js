@@ -44,7 +44,7 @@ const VideoCallController = {
         )
 
         res.on('finish', async () => {
-            const otherUserEmail = req.body.other_user_email
+            const otherUserEmail = req.query.other_user_email
             const otherUser = await User.findOne({ email: otherUserEmail })
             const otherUserFCMToken = otherUser.fcm_token
 
