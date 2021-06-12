@@ -46,10 +46,11 @@ const QuestionController = {
                                     .includes(tag)
                             )
                         ) {
-                            var token = ''
+                            var token = 'token'
                             if (users[index].fcm_token) {
                                 token = users[index].fcm_token
                             }
+
                             const message = {
                                 notification: {
                                     title: 'Outline',
@@ -58,7 +59,8 @@ const QuestionController = {
                                 token: token,
                             }
 
-                            FCMHelper.sendPushNotification(message)
+                            if (token !== 'token')
+                                FCMHelper.sendPushNotification(message)
                         }
                     }
                 }

@@ -68,7 +68,7 @@ const ArticleController = {
                                     .includes(tag)
                             )
                         ) {
-                            var token = ''
+                            var token = 'token'
                             if (users[index].fcm_token) {
                                 token = users[index].fcm_token
                             }
@@ -80,7 +80,8 @@ const ArticleController = {
                                 token: token,
                             }
 
-                            FCMHelper.sendPushNotification(message)
+                            if (token !== 'token')
+                                FCMHelper.sendPushNotification(message)
                         }
                     }
                 }

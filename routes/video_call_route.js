@@ -6,7 +6,7 @@ const VideoCallController = require('../controllers/video_call_controller')
 
 const router = new express.Router()
 
-router.get(
+router.post(
     '/agora-access-token',
     auth,
     noCache,
