@@ -68,6 +68,7 @@ const QuestionController = {
 
             res.status(201).send(question)
         } catch (error) {
+            console.log(error)
             res.status(400).send(error)
         }
     },
@@ -76,13 +77,21 @@ const QuestionController = {
         try {
             const questions = await Question.find({})
 
+            let id
+            if (req.user) id = req.user._id
+
             for (let index = 0; index < questions.length; index++) {
                 await questions[index].populate('tags').execPopulate()
                 await questions[index].populate('owner_user_id').execPopulate()
+                questions[index] = {
+                    question: questions[index],
+                    my_vote: id ? await questions[index].getMyVote(id) : -1,
+                }
             }
 
             res.send(questions)
         } catch (error) {
+            console.log(error)
             res.status(400).send(error)
         }
     },
@@ -115,8 +124,58 @@ const QuestionController = {
             await question.populate('tags').execPopulate()
             await question.populate('owner_user_id').execPopulate()
 
+            const myVote = await question.getMyVote(req.user._id)
+
+            res.send({ question, my_vote: myVote })
+        } catch (error) {
+            console.log(error)
+            res.status(400).send()
+        }
+    },
+
+    voteQuestion: async (req, res) => {
+        const _id = req.params.id
+        const userId = req.user._id
+        const voteValue = parseInt(req.query.value)
+
+        if (voteValue != 0 && voteValue != 1)
+            return res.status(400).send({
+                error: 'Incorrect value!',
+            })
+
+        try {
+            const question = await Question.findOne({ _id })
+            const votes = question.votes
+
+            if (!question) return res.status(404).send()
+            if (question.owner_user_id.equals(userId))
+                return res
+                    .status(400)
+                    .send({ error: "You can't vote for your own question!" })
+
+            let exists = false
+            for (let index = 0; index < votes.length; index++) {
+                const vote = votes[index]
+
+                if (vote.user_id.equals(userId)) {
+                    vote.value = voteValue
+                    exists = true
+                    break
+                }
+            }
+
+            if (!exists) {
+                question.votes.push({
+                    user_id: userId,
+                    value: voteValue,
+                })
+            }
+
+            await question.save()
+
             res.send(question)
         } catch (error) {
+            console.log(error)
             res.status(500).send()
         }
     },

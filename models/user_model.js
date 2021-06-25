@@ -96,14 +96,6 @@ const userSchema = new mongoose.Schema(
                     throw new Error('Reputation must be a positive number')
             },
         },
-        accept_rate: {
-            type: Number,
-            default: 0,
-            validate(value) {
-                if (value < 0)
-                    throw new Error('Accept rate must be a positive number')
-            },
-        },
         tokens: [
             {
                 token: {
@@ -112,20 +104,6 @@ const userSchema = new mongoose.Schema(
                 },
             },
         ],
-        badge_counts: {
-            bronze: {
-                type: 'Number',
-                default: 0,
-            },
-            silver: {
-                type: 'Number',
-                default: 0,
-            },
-            gold: {
-                type: 'Number',
-                default: 0,
-            },
-        },
     },
     {
         timestamps: true,
