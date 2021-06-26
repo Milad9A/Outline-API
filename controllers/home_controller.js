@@ -36,11 +36,15 @@ const HomeController = {
             for (let index = 0; index < q.length; index++) {
                 await q[index].populate('tags').execPopulate()
                 await q[index].populate('owner_user_id').execPopulate()
+                q[index] = {
+                    question: q[index],
+                    my_vote: await q[index].getMyVote(req.user._id),
+                }
             }
 
             let questions = q.map((question) => {
                 return {
-                    date: question.updatedAt,
+                    date: question.question.updatedAt,
                     type: 'question',
                     post: question,
                 }
