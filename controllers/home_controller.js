@@ -10,12 +10,14 @@ const HomeController = {
 
             let a = await Article.find({ tags: { $in: tags } }, null, {
                 limit: parseInt(req.query.limit),
-                skip: parseInt(req.query.skip),
+                skip: parseInt(req.query.articles_skip),
+                sort: { updatedAt: -1 },
             }).exec()
 
             let q = await Question.find({ tags: { $in: tags } }, null, {
                 limit: parseInt(req.query.limit),
-                skip: parseInt(req.query.skip),
+                skip: parseInt(req.query.questions_skip),
+                sort: { updatedAt: -1 },
             }).exec()
 
             for (let index = 0; index < a.length; index++) {
