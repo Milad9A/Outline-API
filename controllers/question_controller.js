@@ -172,11 +172,15 @@ const QuestionController = {
             }
 
             await question.save()
+            await question.populate('tags').execPopulate()
+            await question.populate('owner_user_id').execPopulate()
 
-            res.send(question)
+            const myVote = await question.getMyVote(req.user._id)
+
+            res.send({ question, my_vote: myVote })
         } catch (error) {
             console.log(error)
-            res.status(500).send()
+            res.status(400).send()
         }
     },
 
