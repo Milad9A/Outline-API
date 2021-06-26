@@ -96,7 +96,13 @@ const ArticleController = {
 
     getAllArticles: async (req, res) => {
         try {
-            const articles = await Article.find({})
+            const articles = await Article.find({}, null, {
+                limit:
+                    req.query.limit !== undefined
+                        ? parseInt(req.query.limit)
+                        : 10,
+                skip: parseInt(req.query.skip),
+            })
 
             for (let index = 0; index < articles.length; index++) {
                 await articles[index].populate('tags').execPopulate()
