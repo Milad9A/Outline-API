@@ -1,3 +1,6 @@
+const Article = require('../models/article_model')
+const Question = require('../models/question_model')
+
 const HomeController = {
     getNewsFeed: async (req, res) => {
         try {
@@ -5,26 +8,15 @@ const HomeController = {
 
             const tags = req.user.tags
 
-            let a = []
-            let q = []
+            let a = await Article.find({ tags: { $in: tags } }, null, {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip),
+            }).exec()
 
-            for (let i = 0; i < tags.length; i++) {
-                const tag = tags[i]
-                await tag.populate('articles').execPopulate()
-                await tag.populate('questions').execPopulate()
-
-                for (let j = 0; j < tag.articles.length; j++) {
-                    const article = tag.articles[j]
-                    const exists = a.some((el) => el._id === article._id)
-                    if (!exists) a.push(article)
-                }
-
-                for (let j = 0; j < tag.questions.length; j++) {
-                    const question = tag.questions[j]
-                    const exists = q.some((el) => el._id === question._id)
-                    if (!exists) q.push(question)
-                }
-            }
+            let q = await Question.find({ tags: { $in: tags } }, null, {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip),
+            }).exec()
 
             for (let index = 0; index < a.length; index++) {
                 await a[index].populate('tags').execPopulate()
@@ -55,10 +47,7 @@ const HomeController = {
             let feed = articles.concat(questions)
             feed = feed.sort((a, b) => b.date - a.date)
 
-            const skip = parseInt(req.query.skip)
-            const limit = parseInt(req.query.limit)
-
-            res.send(feed.slice(skip, skip + limit))
+            res.send(feed)
         } catch (error) {
             console.log(error)
             res.status(400).send(error)
