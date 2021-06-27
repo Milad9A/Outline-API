@@ -72,8 +72,7 @@ const questionSchema = new mongoose.Schema(
 )
 
 questionSchema.pre('save', function (next) {
-    if (this.votes.length !== 0)
-        this.score = this.votes.reduce((a, b) => a.value + b.value)
+    if (this.votes) this.score = this.votes.reduce((a, b) => a.value + b.value)
     next()
 })
 

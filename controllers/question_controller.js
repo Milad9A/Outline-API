@@ -175,9 +175,7 @@ const QuestionController = {
             await question.populate('tags').execPopulate()
             await question.populate('owner_user_id').execPopulate()
 
-            const myVote = await question.getMyVote(req.user._id)
-
-            res.send({ question, my_vote: myVote })
+            res.send({ question, my_vote: voteValue })
         } catch (error) {
             console.log(error)
             res.status(400).send()
