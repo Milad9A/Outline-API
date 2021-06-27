@@ -138,7 +138,7 @@ const QuestionController = {
         const userId = req.user._id
         const voteValue = parseInt(req.query.value)
 
-        if (voteValue != 0 && voteValue != 1)
+        if (voteValue != -1 && voteValue != 0 && voteValue != 1)
             return res.status(400).send({
                 error: 'Incorrect value!',
             })

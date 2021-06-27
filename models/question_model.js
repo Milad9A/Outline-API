@@ -88,7 +88,7 @@ questionSchema.methods.getMyVote = async function (id) {
         const vote = votes[index]
         if (vote.user_id.equals(id)) return vote.value
     }
-    return -1
+    return 0
 }
 
 const Question = mongoose.model('Question', questionSchema)

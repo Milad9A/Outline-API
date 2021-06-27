@@ -78,7 +78,7 @@ const UserController = {
             res.send({ user, token })
         } catch (error) {
             console.log(error)
-            res.status(error.status).send({ message: error.message })
+            res.status(error.status).send({ error: error.message })
         }
     },
 
