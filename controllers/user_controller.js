@@ -87,6 +87,7 @@ const UserController = {
             req.user.tokens = req.user.tokens.filter((token) => {
                 return token.token !== req.token
             })
+            req.fcm_token = ''
             await req.user.save()
             res.send()
         } catch (error) {

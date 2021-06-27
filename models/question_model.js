@@ -85,8 +85,6 @@ questionSchema.virtual('score').get(function () {
     for (let index = 0; index < this.votes.length; index++) {
         const vote = this.votes[index]
         sum += vote.value
-        console.log(vote.value)
-        console.log(sum)
     }
     return sum
 })

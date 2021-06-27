@@ -90,6 +90,7 @@ const ArticleController = {
             res.status(201).send(article)
             res.end()
         } catch (error) {
+            console.log(error)
             res.status(400).send(error)
         }
     },
