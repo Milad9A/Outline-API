@@ -43,13 +43,6 @@ const questionSchema = new mongoose.Schema(
                     throw new Error('Answer Count must be a positive number')
             },
         },
-        score: {
-            type: Number,
-            default: function () {
-                if (!this.votes) return 0
-                return this.votes.reduce((a, b) => a.value + b.value)
-            },
-        },
         votes: [
             {
                 user_id: {
@@ -71,11 +64,6 @@ const questionSchema = new mongoose.Schema(
     }
 )
 
-questionSchema.post('save', function (next) {
-    if (this.votes) this.score = this.votes.reduce((a, b) => a.value + b.value)
-    next()
-})
-
 questionSchema.methods.getMyVote = async function (id) {
     const user = await User.findById(id)
 
@@ -89,6 +77,19 @@ questionSchema.methods.getMyVote = async function (id) {
     }
     return 0
 }
+
+questionSchema.virtual('score').get(function () {
+    if (!this.votes) return 0
+
+    let sum = 0
+    for (let index = 0; index < this.votes.length; index++) {
+        const vote = this.votes[index]
+        sum += vote.value
+        console.log(vote.value)
+        console.log(sum)
+    }
+    return sum
+})
 
 const Question = mongoose.model('Question', questionSchema)
 
