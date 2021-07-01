@@ -56,6 +56,11 @@ const QuestionController = {
                                     title: 'Outline',
                                     body: `${req.user.name} asked a new question about a tag you follow!`,
                                 },
+                                data: {
+                                    click_action: 'FLUTTER_NOTIFICATION_CLICK',
+                                    screen_name: 'question_details_screen',
+                                    id: '123',
+                                },
                                 token: token,
                             }
 

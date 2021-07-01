@@ -56,6 +56,11 @@ const VideoCallController = {
                     body: `${req.user.name} is calling you!`,
                 },
                 token: otherUserFCMToken,
+                data: {
+                    screen_name: 'call_screen',
+                    channel_name: channelName,
+                    other_user_email: req.user.email,
+                },
                 android: {
                     ttl: 30000,
                 },

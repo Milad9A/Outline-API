@@ -72,10 +72,16 @@ const ArticleController = {
                             if (users[index].fcm_token) {
                                 token = users[index].fcm_token
                             }
+
                             const message = {
                                 notification: {
                                     title: 'Outline',
                                     body: `${req.user.name} posted a new article about a tag you follow!`,
+                                },
+                                data: {
+                                    click_action: 'FLUTTER_NOTIFICATION_CLICK',
+                                    screen_name: 'article_details_screen',
+                                    id: '123',
                                 },
                                 token: token,
                             }
