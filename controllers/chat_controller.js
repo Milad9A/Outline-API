@@ -2,7 +2,37 @@ const { RtcTokenBuilder, RtcRole } = require('agora-access-token')
 const FCMHelper = require('../helpers/fcm_helper')
 const User = require('../models/user_model')
 
-const VideoCallController = {
+const ChatController = {
+    sendChatNotification: async (req, res) => {
+        try {
+            const otherUserEmail = req.body.other_user_email
+            const otherUser = await User.findOne({ email: otherUserEmail })
+            const otherUserFCMToken = otherUser.fcm_token
+            const body = req.body.message_body
+
+            const message = {
+                notification: {
+                    title: req.user.name,
+                    body: body,
+                },
+                token: otherUserFCMToken,
+                data: {
+                    screen_name: 'conversation_screen',
+                    other_user_email: otherUser.email,
+                    other_user_name: otherUser.name,
+                    other_user_avatar: otherUser.avatar,
+                },
+            }
+
+            FCMHelper.sendPushNotification(message)
+
+            res.send()
+        } catch (error) {
+            console.log(error)
+            res.status(400).send(error)
+        }
+    },
+
     generateAccessToken: (req, res) => {
         res.header('Access-Control-Allow-Origin', '*')
         const channelName = req.query.channel_name
@@ -48,8 +78,6 @@ const VideoCallController = {
             const otherUser = await User.findOne({ email: otherUserEmail })
             const otherUserFCMToken = otherUser.fcm_token
 
-            console.log(otherUserFCMToken)
-
             const message = {
                 notification: {
                     title: 'Outline',
@@ -74,4 +102,4 @@ const VideoCallController = {
     },
 }
 
-module.exports = VideoCallController
+module.exports = ChatController

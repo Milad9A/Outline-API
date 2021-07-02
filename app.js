@@ -43,7 +43,7 @@ app.use(require('./routes/comment_route'))
 app.use(require('./routes/course_route'))
 app.use(require('./routes/category_route'))
 app.use(require('./routes/home_route'))
-app.use(require('./routes/video_call_route'))
+app.use(require('./routes/chat_route'))
 
 const PORT = process.env.PORT || 3000
 
