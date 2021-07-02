@@ -9,6 +9,7 @@ const ChatController = {
             const otherUser = await User.findOne({ email: otherUserEmail })
             const otherUserFCMToken = otherUser.fcm_token
             const body = req.body.message_body
+            const chatRoomId = req.body.chat_room_id
 
             const message = {
                 notification: {
@@ -21,6 +22,7 @@ const ChatController = {
                     other_user_email: otherUser.email,
                     other_user_name: otherUser.name,
                     other_user_avatar: otherUser.avatar,
+                    chat_room_id: chatRoomId,
                 },
             }
 
