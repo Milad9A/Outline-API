@@ -80,7 +80,13 @@ const QuestionController = {
 
     getAllQuestions: async (req, res) => {
         try {
-            const questions = await Question.find({})
+            const questions = await Question.find({}, null, {
+                limit:
+                    req.query.limit !== undefined
+                        ? parseInt(req.query.limit)
+                        : 10,
+                skip: parseInt(req.query.skip),
+            })
 
             let id
             if (req.user) id = req.user._id
@@ -150,9 +156,9 @@ const QuestionController = {
 
         try {
             const question = await Question.findOne({ _id })
-            const votes = question.votes
-
             if (!question) return res.status(404).send()
+
+            const votes = question.votes
             if (question.owner_user_id.equals(userId))
                 return res
                     .status(400)

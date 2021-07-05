@@ -1,6 +1,8 @@
 const express = require('express')
 const auth = require('../middleware/auth')
 const uploadImageBanner = require('../middleware/upload_image_banner')
+const optionalAuth = require('../middleware/optional_auth')
+
 const ArticleController = require('../controllers/article_controller')
 
 const router = express.Router()
@@ -15,11 +17,13 @@ router.post(
     }
 )
 
-router.get('/articles', ArticleController.getAllArticles)
+router.get('/articles', optionalAuth, ArticleController.getAllArticles)
 
 router.get('/articles/me', auth, ArticleController.getMyArticles)
 
 router.get('/articles/:id', auth, ArticleController.getArticle)
+
+router.post('/articles/:id/like', auth, ArticleController.likeArticle)
 
 router.patch('/articles/:id', auth, ArticleController.updateArticle)
 

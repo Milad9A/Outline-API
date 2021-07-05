@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const User = require('../models/user_model')
 
 const articleSchema = new mongoose.Schema(
     {
@@ -34,11 +35,33 @@ const articleSchema = new mongoose.Schema(
                 ref: 'Tag',
             },
         ],
+        likes: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                required: true,
+                ref: 'User',
+            },
+        ],
     },
     {
         timestamps: true,
+        toObject: { virtuals: true },
+        toJSON: { virtuals: true },
     }
 )
+
+articleSchema.methods.getLikedByMe = async function (id) {
+    try {
+        const user = await User.findById(id)
+
+        if (!user) throw new InvalidEmailOrPasswordError('User not found')
+
+        if (this.likes.includes(id)) return 1
+        return 0
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 const Article = mongoose.model('Article', articleSchema)
 

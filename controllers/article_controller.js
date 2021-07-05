@@ -111,9 +111,16 @@ const ArticleController = {
                 skip: parseInt(req.query.skip),
             })
 
+            let id
+            if (req.user) id = req.user._id
+
             for (let index = 0; index < articles.length; index++) {
                 await articles[index].populate('tags').execPopulate()
                 await articles[index].populate('owner_user_id').execPopulate()
+                articles[index] = {
+                    article: articles[index],
+                    my_like: id ? await articles[index].getLikedByMe(id) : 0,
+                }
             }
 
             res.send(articles)
@@ -131,6 +138,10 @@ const ArticleController = {
             for (let index = 0; index < articles.length; index++) {
                 await articles[index].populate('tags').execPopulate()
                 await articles[index].populate('owner_user_id').execPopulate()
+                articles[index] = {
+                    article: articles[index],
+                    my_like: await articles[index].getLikedByMe(req.user._id),
+                }
             }
 
             res.send(articles)
@@ -151,9 +162,39 @@ const ArticleController = {
             await article.populate('tags').execPopulate()
             await article.populate('owner_user_id').execPopulate()
 
-            res.send(article)
+            const myLike = await article.getLikedByMe(req.user._id)
+
+            res.send({ article, my_like: myLike })
         } catch (error) {
             res.status(500).send()
+        }
+    },
+
+    likeArticle: async (req, res) => {
+        const _id = req.params.id
+        const userId = req.user._id
+
+        try {
+            const article = await Article.findOne({ _id })
+            let likeValue
+
+            if (!article) return res.status(404).send()
+
+            if (!article.likes.includes(userId)) {
+                article.likes.push(userId)
+                likeValue = 1
+            } else {
+                article.likes.splice(article.likes.indexOf(userId), 1)
+                likeValue = 0
+            }
+
+            await article.save()
+            await article.populate('tags').execPopulate()
+            await article.populate('owner_user_id').execPopulate()
+
+            res.send({ article, my_like: likeValue })
+        } catch (error) {
+            res.status(400).send()
         }
     },
 

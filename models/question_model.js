@@ -67,8 +67,7 @@ const questionSchema = new mongoose.Schema(
 questionSchema.methods.getMyVote = async function (id) {
     const user = await User.findById(id)
 
-    if (!user)
-        throw new InvalidEmailOrPasswordError('Invalid Email or Password')
+    if (!user) throw new InvalidEmailOrPasswordError('User not found')
 
     const votes = this.votes
     for (let index = 0; index < votes.length; index++) {
