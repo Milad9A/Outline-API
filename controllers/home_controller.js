@@ -11,23 +11,27 @@ const HomeController = {
             let a = await Article.find({ tags: { $in: tags } }, null, {
                 limit: parseInt(req.query.limit),
                 skip: parseInt(req.query.articles_skip),
-                sort: { updatedAt: -1 },
+                sort: { createdAt: -1 },
             }).exec()
 
             let q = await Question.find({ tags: { $in: tags } }, null, {
                 limit: parseInt(req.query.limit),
                 skip: parseInt(req.query.questions_skip),
-                sort: { updatedAt: -1 },
+                sort: { createdAt: -1 },
             }).exec()
 
             for (let index = 0; index < a.length; index++) {
                 await a[index].populate('tags').execPopulate()
                 await a[index].populate('owner_user_id').execPopulate()
+                a[index] = {
+                    article: a[index],
+                    my_like: await a[index].getLikedByMe(req.user._id),
+                }
             }
 
             let articles = a.map((article) => {
                 return {
-                    date: article.updatedAt,
+                    date: article.article.createdAt,
                     type: 'article',
                     post: article,
                 }
@@ -44,7 +48,7 @@ const HomeController = {
 
             let questions = q.map((question) => {
                 return {
-                    date: question.question.updatedAt,
+                    date: question.question.createdAt,
                     type: 'question',
                     post: question,
                 }
