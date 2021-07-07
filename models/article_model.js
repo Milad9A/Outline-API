@@ -35,6 +35,12 @@ const articleSchema = new mongoose.Schema(
                 ref: 'Tag',
             },
         ],
+        comments: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Comment',
+            },
+        ],
         likes: [
             {
                 type: mongoose.Schema.Types.ObjectId,

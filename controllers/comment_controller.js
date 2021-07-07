@@ -1,4 +1,5 @@
 const Comment = require('../models/comment_model')
+const Article = require('../models/article_model')
 
 const CommentController = {
     createComment: async (req, res) => {
@@ -6,16 +7,23 @@ const CommentController = {
             ...req.body,
             owner_user_id: req.user._id,
         })
+
         try {
+            const article = await Article.findById(req.body.article_id)
+            if (!article) return res.status(404).send()
+
+            await article.comments.push(comment)
+            await article.save()
+
             await req.user.comments.push(comment)
             await req.user.save()
 
             await comment.save()
-
             await comment.populate('owner_user_id').execPopulate()
 
             res.status(201).send(comment)
         } catch (error) {
+            console.log(error)
             res.status(400).send(error)
         }
     },
