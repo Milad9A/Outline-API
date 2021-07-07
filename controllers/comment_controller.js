@@ -9,7 +9,11 @@ const CommentController = {
         try {
             await req.user.comments.push(comment)
             await req.user.save()
+
             await comment.save()
+
+            await comment.populate('owner_user_id').execPopulate()
+
             res.status(201).send(comment)
         } catch (error) {
             res.status(400).send(error)
@@ -18,7 +22,9 @@ const CommentController = {
 
     getAllComments: async (req, res) => {
         try {
-            const comments = await Comment.find({})
+            const comments = await Comment.find({}, null, {
+                populate: 'owner_user_id',
+            }).exec()
 
             res.send(comments)
         } catch (error) {
@@ -28,7 +34,14 @@ const CommentController = {
 
     getMyComments: async (req, res) => {
         try {
-            await req.user.populate('comments').execPopulate()
+            await req.user
+                .populate({
+                    path: 'comments',
+                    populate: {
+                        path: 'owner_user_id',
+                    },
+                })
+                .execPopulate()
 
             res.send(req.user.comments)
         } catch (error) {
@@ -43,6 +56,8 @@ const CommentController = {
             const comment = await Comment.findOne({ _id })
 
             if (!comment) return res.status(404).send()
+
+            await comment.populate('owner_user_id').execPopulate()
 
             res.send(comment)
         } catch (error) {
@@ -64,6 +79,8 @@ const CommentController = {
             updates.forEach((update) => (comment[update] = req.body[update]))
 
             await comment.save()
+
+            await comment.populate('owner_user_id').execPopulate()
 
             res.send(comment)
         } catch (error) {
