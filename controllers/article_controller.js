@@ -285,7 +285,12 @@ const ArticleController = {
 
             if (!article) return res.status(404).send()
 
-            await article.populate('comments').execPopulate()
+            await article
+                .populate({
+                    path: 'comments',
+                    populate: 'owner_user_id',
+                })
+                .execPopulate()
 
             res.send(article.comments)
         } catch (error) {
