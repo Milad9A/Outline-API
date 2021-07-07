@@ -276,6 +276,22 @@ const ArticleController = {
             res.status(500).send()
         }
     },
+
+    getArticleComments: async (req, res) => {
+        try {
+            const article = await Article.findOne({
+                _id: req.params.id,
+            })
+
+            if (!article) return res.status(404).send()
+
+            await article.populate('comments').execPopulate()
+
+            res.send(article.comments)
+        } catch (error) {
+            res.status(500).send()
+        }
+    },
 }
 
 module.exports = ArticleController

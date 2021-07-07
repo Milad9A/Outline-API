@@ -31,4 +31,6 @@ router.delete('/articles/:id', auth, ArticleController.deleteArticle)
 
 router.get('/articles/:id/tags', auth, ArticleController.getArticleTags)
 
+router.get('/articles/:id/comments', auth, ArticleController.getArticleComments)
+
 module.exports = router
