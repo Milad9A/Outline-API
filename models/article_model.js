@@ -56,6 +56,43 @@ const articleSchema = new mongoose.Schema(
     }
 )
 
+articleSchema.index({
+    title: 'text',
+    content: 'text',
+})
+
+articleSchema.statics = {
+    searchPartial: function (q, callback) {
+        return this.find(
+            {
+                $or: [
+                    { title: new RegExp(q, 'gi') },
+                    { body: new RegExp(q, 'gi') },
+                ],
+            },
+            callback
+        )
+    },
+
+    searchFull: function (q, callback) {
+        return this.find(
+            {
+                $text: { $search: q, $caseSensitive: false },
+            },
+            callback
+        )
+    },
+
+    search: function (q, callback) {
+        this.searchFull(q, (err, data) => {
+            if (err) return callback(err, data)
+            if (!err && data.length) return callback(err, data)
+            if (!err && data.length === 0)
+                return this.searchPartial(q, callback)
+        })
+    },
+}
+
 articleSchema.methods.getLikedByMe = async function (id) {
     try {
         const user = await User.findById(id)

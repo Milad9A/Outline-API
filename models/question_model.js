@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const User = require('../models/user_model')
+const TextSearch = require('mongoose-partial-full-search')
 
 const questionSchema = new mongoose.Schema(
     {
@@ -63,6 +64,43 @@ const questionSchema = new mongoose.Schema(
         toJSON: { virtuals: true },
     }
 )
+
+questionSchema.index({
+    title: 'text',
+    body: 'text',
+})
+
+questionSchema.statics = {
+    searchPartial: function (q, callback) {
+        return this.find(
+            {
+                $or: [
+                    { title: new RegExp(q, 'gi') },
+                    { body: new RegExp(q, 'gi') },
+                ],
+            },
+            callback
+        )
+    },
+
+    searchFull: function (q, callback) {
+        return this.find(
+            {
+                $text: { $search: q, $caseSensitive: false },
+            },
+            callback
+        )
+    },
+
+    search: function (q, callback) {
+        this.searchFull(q, (err, data) => {
+            if (err) return callback(err, data)
+            if (!err && data.length) return callback(err, data)
+            if (!err && data.length === 0)
+                return this.searchPartial(q, callback)
+        })
+    },
+}
 
 questionSchema.methods.getMyVote = async function (id) {
     const user = await User.findById(id)
