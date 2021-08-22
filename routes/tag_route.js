@@ -16,4 +16,6 @@ router.delete('/tags/:id', auth, TagController.deleteTag)
 
 router.get('/tags/:id/questions', auth, TagController.getTagQuestions)
 
+router.get('/tags/:id/articles', auth, TagController.getTagArticles)
+
 module.exports = router

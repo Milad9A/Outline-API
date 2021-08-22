@@ -84,6 +84,22 @@ const TagController = {
             res.status(500).send()
         }
     },
+
+    getTagArticles: async (req, res) => {
+        try {
+            const tag = await Tag.findOne({
+                _id: req.params.id,
+            })
+
+            if (!tag) return res.status(404).send()
+
+            await tag.populate('articles').execPopulate()
+
+            res.send(tag.articles)
+        } catch (error) {
+            res.status(500).send()
+        }
+    },
 }
 
 module.exports = TagController

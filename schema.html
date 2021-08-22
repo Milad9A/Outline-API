@@ -1,0 +1,586 @@
+<!doctype html>
+<head>
+	<title>Mongo Schema</title>
+
+	<style>
+		svg {
+			background-color: white;
+			font-family: "Helvetic Neue", Helvetica, Arial, sans-serif;
+			font-size: small;
+		}
+
+		.node rect,
+		.node circle,
+		.node ellipse {
+		  stroke: #333;
+		  opacity: 0.8;
+		  fill: #fff;
+		  fill-opacity: 0.6;
+		}
+		.edgePath path {
+		  stroke: #333;
+		  fill: #333;
+		  fill-opacity: 1;
+		  stroke-opacity: 1;
+		}
+		.cluster {
+		  stroke: #999;
+		  fill: #888;
+		  fill-opacity: 0.3;
+		  stroke-opacity: 0.6;
+		}
+		.entity-name rect {
+		  fill: #08f;
+		  fill-opacity: 0.3;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="background"></div>
+	<div class="container">
+		<svg></svg>
+	</div>
+	<canvas width="1024" height="1024" style="display:none"></canvas>
+
+
+	<script src="https://d3js.org/d3.v3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.4.17/dagre-d3.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+	<script>
+		var drawERM = function(data) {
+			var width = window.innerWidth, 
+			initialHeight = window.innerHeight, 
+			svg = d3.select("body div.container svg"),
+			inner = svg.append("g");
+
+			svg.attr('width', width).attr('height', initialHeight);
+
+			var resizeGraph = function(doCenter) {
+				var newWidth = window.innerWidth; 
+				var newHeight = window.innerHeight;
+
+				if(newWidth < g.graph().width + 40) {
+					newWidth = g.graph().width + 40;
+				}
+				if(newHeight < g.graph().height + 40) {
+					newHeight = g.graph().height + 40;
+				}
+				svg.attr('width', newWidth).attr('height', newHeight);
+
+				// Center the graph
+				if(doCenter) {
+					zoom
+					  .translate([(svg.attr("width") - g.graph().width * initialScale) / 2, 20])
+					  .scale(initialScale)
+					  .event(svg);
+				}
+			}
+
+			// Set up zoom support
+			var zoom = d3.behavior.zoom().on("zoom", function() {
+			  inner.attr("transform", "translate(" + d3.event.translate + ")" +
+			    "scale(" + d3.event.scale + ")");
+			});
+			svg.call(zoom);
+
+			// create graph
+			var g = new dagreD3.graphlib.Graph({
+			  multigraph: false,
+			  compound: true
+			}).setGraph({
+			  rankdir: "LR",
+			  edgesep: 25,
+			  nodesep: 0
+			});
+
+			var links = [];
+
+			var addField = function(collectionName, fieldName, fieldInfo, parentFieldName) {
+				var nodeName = parentFieldName ? collectionName + "_" + parentFieldName + "_" + fieldName : collectionName + "_" + fieldName;
+				g.setNode(nodeName, {
+				  label: (parentFieldName ? parentFieldName + "." + fieldName : fieldName) + ": " + fieldInfo.type,
+				  width: 300
+				});
+				g.setParent(nodeName, "___" + collectionName + "_container");
+
+				if(fieldInfo.foreignKey && fieldInfo.references) {
+					links.push({
+						from: nodeName,
+						to: fieldInfo.references + "__id"
+					});			
+				}
+
+				if(fieldInfo.type == "Object" && fieldInfo.structure) {
+					for(var subFieldName in fieldInfo.structure) {
+						addField(collectionName, subFieldName, fieldInfo.structure[subFieldName], parentFieldName ? parentFieldName + "." + fieldName : fieldName);
+					}
+				}
+			};
+
+			var addCollection = function(collectionName, collectionInfo) {
+				g.setNode("___" + collectionName + "_container", {
+				  label: ""
+				});
+				g.setNode("___" + collectionName + "_title", {
+				  label: collectionName,
+				  class: 'entity-name',
+				  labelStyle: 'font-weight:bold;',
+				  width: 300
+				});
+
+				g.setParent("___" + collectionName + "_title", "___" + collectionName + "_container");
+
+				for(var fieldName in collectionInfo) {
+					addField(collectionName, fieldName, collectionInfo[fieldName]);
+				}
+			};
+
+			for(var collectionName in data) {
+				addCollection(collectionName, data[collectionName]);
+			}
+
+			links.map(function(link) {
+				g.setEdge(link.from, link.to, {
+				  label: '',
+				  lineInterpolate: 'monotone'
+				});
+			});
+
+			// Create the renderer
+			var render = dagreD3.render();
+
+			// Run the renderer. This is what draws the final graph.
+			render(inner, g);
+
+			// adjust height
+			var initialScale = 1; //0.75;
+
+			window.addEventListener('resize', function () {
+				resizeGraph();
+			});
+
+			resizeGraph(true);
+
+		};
+
+		var data = {
+	"users": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"badge_counts": {
+			"type": "Object",
+			"structure": {
+				"bronze": {
+					"type": "number",
+					"required": true
+				},
+				"silver": {
+					"type": "number",
+					"required": true
+				},
+				"gold": {
+					"type": "number",
+					"required": true
+				}
+			},
+			"required": true
+		},
+		"role": {
+			"type": "string",
+			"required": true
+		},
+		"aboutMe": {
+			"type": "string",
+			"required": true
+		},
+		"tags": {
+			"type": "Array",
+			"required": true
+		},
+		"questions": {
+			"type": "Array",
+			"required": true
+		},
+		"answers": {
+			"type": "Array",
+			"required": true
+		},
+		"articles": {
+			"type": "Array",
+			"required": true
+		},
+		"comments": {
+			"type": "Array",
+			"required": true
+		},
+		"courses": {
+			"type": "Array",
+			"required": true
+		},
+		"reputation": {
+			"type": "number",
+			"required": true
+		},
+		"accept_rate": {
+			"type": "number",
+			"required": true
+		},
+		"name": {
+			"type": "string",
+			"required": true
+		},
+		"email": {
+			"type": "string",
+			"required": true
+		},
+		"password": {
+			"type": "string",
+			"required": true
+		},
+		"purchased_courses": {
+			"type": "Array",
+			"required": true
+		},
+		"tokens": {
+			"type": "Array",
+			"required": true
+		},
+		"createdAt": {
+			"type": "Date",
+			"required": true
+		},
+		"updatedAt": {
+			"type": "Date",
+			"required": true
+		},
+		"__v": {
+			"type": "number",
+			"required": true
+		},
+		"avatar": {
+			"type": "string",
+			"required": true
+		},
+		"fcm_token": {
+			"type": "string",
+			"required": true
+		}
+	},
+	"courses": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"is_paid": {
+			"type": "boolean",
+			"required": true
+		},
+		"num_of_subscribers": {
+			"type": "number",
+			"required": true
+		},
+		"num_of_lectures": {
+			"type": "number",
+			"required": true
+		},
+		"avg_rating": {
+			"type": "number",
+			"required": true
+		},
+		"contents": {
+			"type": "Array",
+			"required": true
+		},
+		"requirements": {
+			"type": "string",
+			"required": true
+		},
+		"price": {
+			"type": "number",
+			"required": true
+		},
+		"description": {
+			"type": "string",
+			"required": true
+		},
+		"title": {
+			"key": true,
+			"type": "string",
+			"required": true
+		},
+		"owner_user_id": {
+			"foreignKey": true,
+			"references": "users",
+			"key": true,
+			"type": "Object",
+			"required": true
+		},
+		"banner": {
+			"type": "string",
+			"required": true
+		},
+		"createdAt": {
+			"type": "Date",
+			"required": true
+		},
+		"updatedAt": {
+			"type": "Date",
+			"required": true
+		},
+		"__v": {
+			"type": "number",
+			"required": true
+		}
+	},
+	"articles": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"view_count": {
+			"type": "number",
+			"required": true
+		},
+		"banner": {
+			"type": "string",
+			"required": true
+		},
+		"tags": {
+			"type": "Array",
+			"required": true
+		},
+		"content": {
+			"key": true,
+			"type": "string",
+			"required": true
+		},
+		"title": {
+			"key": true,
+			"type": "string",
+			"required": true
+		},
+		"owner_user_id": {
+			"foreignKey": true,
+			"references": "users",
+			"key": true,
+			"type": "Object",
+			"required": true
+		},
+		"createdAt": {
+			"type": "Date",
+			"required": true
+		},
+		"updatedAt": {
+			"type": "Date",
+			"required": true
+		},
+		"__v": {
+			"type": "number",
+			"required": true
+		},
+		"comments": {
+			"type": "Array",
+			"required": true
+		},
+		"likes": {
+			"type": "Array",
+			"required": true
+		}
+	},
+	"questions": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"tags": {
+			"type": "Array",
+			"required": true
+		},
+		"is_answered": {
+			"type": "boolean",
+			"required": true
+		},
+		"view_count": {
+			"type": "number",
+			"required": true
+		},
+		"answer_count": {
+			"type": "number",
+			"required": true
+		},
+		"title": {
+			"type": "string",
+			"required": true
+		},
+		"body": {
+			"type": "string",
+			"required": true
+		},
+		"owner_user_id": {
+			"foreignKey": true,
+			"references": "users",
+			"key": true,
+			"type": "Object",
+			"required": true
+		},
+		"score": {
+			"type": "number",
+			"required": true
+		},
+		"votes": {
+			"type": "Array",
+			"required": true
+		},
+		"createdAt": {
+			"type": "Date",
+			"required": true
+		},
+		"updatedAt": {
+			"type": "Date",
+			"required": true
+		},
+		"__v": {
+			"type": "number",
+			"required": true
+		}
+	},
+	"coursecontents": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"content_type": {
+			"type": "string",
+			"required": true
+		},
+		"content_name": {
+			"type": "string",
+			"required": true
+		},
+		"content_link": {
+			"type": "string",
+			"required": true
+		},
+		"course_id": {
+			"foreignKey": true,
+			"references": "courses",
+			"key": true,
+			"type": "Object",
+			"required": true
+		},
+		"video_duration_in_seconds": {
+			"type": "string",
+			"required": true
+		},
+		"__v": {
+			"type": "number",
+			"required": true
+		}
+	},
+	"tags": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"count": {
+			"type": "number",
+			"required": true
+		},
+		"questions": {
+			"type": "Array",
+			"required": true
+		},
+		"articles": {
+			"type": "Array",
+			"required": true
+		},
+		"name": {
+			"type": "string",
+			"required": true
+		},
+		"__v": {
+			"type": "number",
+			"required": true
+		}
+	},
+	"categories": {},
+	"comments": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"body": {
+			"type": "string",
+			"required": true
+		},
+		"article_id": {
+			"foreignKey": true,
+			"references": "articles",
+			"key": true,
+			"type": "Object",
+			"required": true
+		},
+		"owner_user_id": {
+			"key": true,
+			"type": "Object",
+			"required": true
+		},
+		"createdAt": {
+			"type": "Date",
+			"required": true
+		},
+		"updatedAt": {
+			"type": "Date",
+			"required": true
+		},
+		"__v": {
+			"type": "number",
+			"required": true
+		}
+	}
+};
+
+		drawERM(data);
+
+		$("canvas").attr("width", $("svg").width());
+		$("canvas").attr("height", $("svg").height());
+
+		var st = $(document.createElement("style"));
+		st.text("/* <![CDATA[ */" + $("style").text() + "/* ]]> */");
+		$("svg").append(st);
+		var html = d3.select("svg")
+			.attr("version", 1.1)
+			.attr("xmlns", "http://www.w3.org/2000/svg")
+			.node().parentNode.innerHTML;
+
+		var imgsrc = 'data:image/svg+xml;base64,'+ btoa(html);
+
+		var canvas = document.querySelector("canvas"),
+			context = canvas.getContext("2d");
+
+		var image = new Image;
+		image.src = imgsrc;
+		image.onload = function() {
+			context.drawImage(image, 0, 0);
+
+			var canvasdata = canvas.toDataURL("image/png");
+
+			var a = document.createElement("a");
+			a.download = "diagram.png";
+			a.href = canvasdata;
+			document.body.appendChild(a);
+			a.click();
+		};
+	</script>
+</body>
