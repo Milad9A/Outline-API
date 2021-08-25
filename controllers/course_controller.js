@@ -154,7 +154,10 @@ const CourseController = {
             const course = await Course.findOne({ _id })
 
             if (!course) return res.status(404).send()
+
             await course.populate('contents').execPopulate()
+            await course.populate('owner_user_id').execPopulate()
+
             res.send(course)
         } catch (error) {
             res.status(500).send()

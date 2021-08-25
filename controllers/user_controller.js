@@ -109,6 +109,17 @@ const UserController = {
         res.send(req.user)
     },
 
+    getUser: async (req, res) => {
+        try {
+            const user = await User.findById(req.params.id)
+            if (!user) return res.status(404).send()
+
+            res.send(user)
+        } catch (error) {
+            res.status(400).send(error)
+        }
+    },
+
     getAllUsersPublicInfo: async (req, res) => {
         try {
             const users = await User.find({}).select({
