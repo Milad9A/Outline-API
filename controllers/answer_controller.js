@@ -9,7 +9,8 @@ const AnswerController = {
         })
 
         try {
-            const _id = req.params.id
+            const _id = req.body.question_id
+
             const question = await Question.findById(_id)
 
             if (!question) return res.status(404).send()
