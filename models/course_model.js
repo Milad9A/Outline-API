@@ -32,11 +32,12 @@ const courseSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        num_of_subscribers: {
+
+        num_of_lectures: {
             type: Number,
             default: 0,
         },
-        num_of_lectures: {
+        length_of_the_course_in_seconds: {
             type: Number,
             default: 0,
         },
@@ -48,6 +49,12 @@ const courseSchema = new mongoose.Schema(
             type: String,
             default: 'https://wallpapercave.com/wp/wp2200994.png',
         },
+        num_of_subscribers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+            },
+        ],
         contents: [
             {
                 type: mongoose.Schema.Types.ObjectId,
