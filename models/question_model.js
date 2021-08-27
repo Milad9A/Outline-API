@@ -36,14 +36,12 @@ const questionSchema = new mongoose.Schema(
                     throw new Error('View Count must be a positive number')
             },
         },
-        answer_count: {
-            type: Number,
-            default: 0,
-            validate(value) {
-                if (value < 0)
-                    throw new Error('Answer Count must be a positive number')
+        answers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Answer',
             },
-        },
+        ],
         votes: [
             {
                 user_id: {

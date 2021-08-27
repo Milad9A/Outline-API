@@ -9,8 +9,17 @@ const AnswerController = {
         })
 
         try {
+            const _id = req.params.id
+            const question = await Question.findById(_id)
+
+            if (!question) return res.status(404).send()
+
             await req.user.answers.push(answer)
+            await question.answers.push(answer)
+
             await req.user.save()
+            await question.save()
+
             await answer.save()
             res.status(201).send(answer)
         } catch (error) {
