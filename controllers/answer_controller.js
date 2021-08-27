@@ -103,6 +103,54 @@ const AnswerController = {
             res.status(500).send(error)
         }
     },
+
+    voteAnswer: async (req, res) => {
+        const _id = req.params.id
+        const userId = req.user._id
+        const voteValue = parseInt(req.query.value)
+
+        if (voteValue != -1 && voteValue != 0 && voteValue != 1)
+            return res.status(400).send({
+                error: 'Incorrect value!',
+            })
+
+        try {
+            const answer = await Answer.findOne({ _id })
+            if (!answer) return res.status(404).send()
+
+            const votes = answer.votes
+            if (answer.owner_user_id.equals(userId))
+                return res
+                    .status(400)
+                    .send({ error: "You can't vote for your own answer!" })
+
+            let exists = false
+            for (let index = 0; index < votes.length; index++) {
+                const vote = votes[index]
+
+                if (vote.user_id.equals(userId)) {
+                    vote.value = voteValue
+                    exists = true
+                    break
+                }
+            }
+
+            if (!exists) {
+                answer.votes.push({
+                    user_id: userId,
+                    value: voteValue,
+                })
+            }
+
+            await answer.save()
+            await question.populate('owner_user_id').execPopulate()
+
+            res.send({ answer, my_vote: voteValue })
+        } catch (error) {
+            console.log(error)
+            res.status(400).send()
+        }
+    },
 }
 
 module.exports = AnswerController

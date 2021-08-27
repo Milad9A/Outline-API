@@ -319,6 +319,18 @@ const QuestionController = {
                 })
                 .execPopulate()
 
+            const answers = question.answers
+
+            let id
+            if (req.user) id = req.user._id
+
+            for (let index = 0; index < answers.length; index++) {
+                answers[index] = {
+                    answer: answers[index],
+                    my_vote: id ? await answers[index].getMyVote(id) : -1,
+                }
+            }
+
             res.send(question.answers)
         } catch (error) {
             res.status(400).send(error)

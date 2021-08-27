@@ -1,4 +1,3 @@
-const { populate } = require('../models/article_model')
 const Article = require('../models/article_model')
 const Question = require('../models/question_model')
 
@@ -48,6 +47,15 @@ const HomeController = {
                         },
                     })
                     .execPopulate()
+
+                for (let j = 0; j < answers.length; j++) {
+                    q[index].answers[j] = {
+                        answer: q[index].answers[j],
+                        my_vote: await q[index].answers[j].getMyVote(
+                            req.user.id
+                        ),
+                    }
+                }
 
                 await q[index].populate('owner_user_id').execPopulate()
                 q[index] = {
