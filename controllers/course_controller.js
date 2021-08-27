@@ -101,7 +101,9 @@ const CourseController = {
 
     getAllCourses: async (req, res) => {
         try {
-            const courses = await Course.find({})
+            const courses = await Course.find({}, null, {
+                limit: parseInt(req.query.limit),
+            })
 
             for (let index = 0; index < courses.length; index++) {
                 await courses[index].populate('contents').execPopulate()

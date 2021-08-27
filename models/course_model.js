@@ -32,11 +32,6 @@ const courseSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-
-        num_of_lectures: {
-            type: Number,
-            default: 0,
-        },
         length_of_the_course_in_seconds: {
             type: Number,
             default: 0,
