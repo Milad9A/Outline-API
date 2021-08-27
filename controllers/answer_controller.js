@@ -1,4 +1,5 @@
 const Answer = require('../models/answer_model')
+const Question = require('../models/question_model')
 
 const AnswerController = {
     createAnswer: async (req, res) => {

@@ -21,4 +21,10 @@ router.delete('/questions/:id', auth, QuestionController.deleteQuestion)
 
 router.get('/questions/:id/tags', auth, QuestionController.getQuestionTags)
 
+router.get(
+    '/questions/:id/answers',
+    auth,
+    QuestionController.getQuestionAnswers
+)
+
 module.exports = router

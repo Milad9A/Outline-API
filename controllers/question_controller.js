@@ -246,6 +246,7 @@ const QuestionController = {
             if (!question) return res.status(404).send()
 
             const index = req.user.questions.indexOf(question)
+
             if (index > -1) req.user.questions.splice(index, 1)
             await req.user.save()
 
@@ -267,7 +268,21 @@ const QuestionController = {
 
             res.send(question.tags)
         } catch (error) {
-            res.status(500).send()
+            res.status(400).send()
+        }
+    },
+
+    getQuestionAnswers: async (req, res) => {
+        const _id = req.params.id
+        try {
+            const question = await Question.findById(_id)
+            if (!question) return res.status(404).send()
+
+            await question.populate('answers').execPopulate()
+
+            res.send(question.answers)
+        } catch (error) {
+            res.status(400).send(error)
         }
     },
 }
