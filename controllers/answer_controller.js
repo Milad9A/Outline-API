@@ -143,7 +143,7 @@ const AnswerController = {
             }
 
             await answer.save()
-            await question.populate('owner_user_id').execPopulate()
+            await answer.populate('owner_user_id').execPopulate()
 
             res.send({ answer, my_vote: voteValue })
         } catch (error) {
