@@ -48,7 +48,7 @@ const HomeController = {
                     })
                     .execPopulate()
 
-                for (let j = 0; j < answers.length; j++) {
+                for (let j = 0; j < q[index].answers.length; j++) {
                     q[index].answers[j] = {
                         answer: q[index].answers[j],
                         my_vote: await q[index].answers[j].getMyVote(
