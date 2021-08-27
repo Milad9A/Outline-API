@@ -39,6 +39,7 @@ const HomeController = {
 
             for (let index = 0; index < q.length; index++) {
                 await q[index].populate('tags').execPopulate()
+                await q[index].populate('answers').execPopulate()
                 await q[index].populate('owner_user_id').execPopulate()
                 q[index] = {
                     question: q[index],
