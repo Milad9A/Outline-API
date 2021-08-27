@@ -49,7 +49,7 @@ const courseSchema = new mongoose.Schema(
             type: String,
             default: 'https://wallpapercave.com/wp/wp2200994.png',
         },
-        num_of_subscribers: [
+        subscribers: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User',

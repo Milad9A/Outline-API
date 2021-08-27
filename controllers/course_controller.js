@@ -85,7 +85,7 @@ const CourseController = {
             .end(async (err, result) => {
                 if (result.ok) {
                     user.purchased_courses.push(course)
-                    course.subscribers.push(user._id)
+                    course.subscribers.push(user)
                     await user.save()
                     await course.save()
                     res.status(201).send()
