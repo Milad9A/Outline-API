@@ -33,7 +33,14 @@ const QuestionController = {
             await req.user.save()
             await question.save()
             await question.populate('tags').execPopulate()
-            await question.populate('answers').execPopulate()
+            await question
+                .populate({
+                    path: 'answers',
+                    populate: {
+                        path: 'owner_user_id',
+                    },
+                })
+                .execPopulate()
             await question.populate('owner_user_id').execPopulate()
 
             res.on('finish', async () => {
@@ -134,7 +141,14 @@ const QuestionController = {
             if (!question) return res.status(404).send()
 
             await question.populate('tags').execPopulate()
-            await question.populate('answers').execPopulate()
+            await question
+                .populate({
+                    path: 'answers',
+                    populate: {
+                        path: 'owner_user_id',
+                    },
+                })
+                .execPopulate()
             await question.populate('owner_user_id').execPopulate()
 
             const myVote = await question.getMyVote(req.user._id)
@@ -186,7 +200,14 @@ const QuestionController = {
 
             await question.save()
             await question.populate('tags').execPopulate()
-            await question.populate('answers').execPopulate()
+            await question
+                .populate({
+                    path: 'answers',
+                    populate: {
+                        path: 'owner_user_id',
+                    },
+                })
+                .execPopulate()
             await question.populate('owner_user_id').execPopulate()
 
             res.send({ question, my_vote: voteValue })
@@ -231,7 +252,14 @@ const QuestionController = {
 
             await question.save()
             await question.populate('tags').execPopulate()
-            await question.populate('answers').execPopulate()
+            await question
+                .populate({
+                    path: 'answers',
+                    populate: {
+                        path: 'owner_user_id',
+                    },
+                })
+                .execPopulate()
             await question.populate('owner_user_id').execPopulate()
 
             res.send(question)
@@ -282,7 +310,14 @@ const QuestionController = {
             const question = await Question.findById(_id)
             if (!question) return res.status(404).send()
 
-            await question.populate('answers').execPopulate()
+            await question
+                .populate({
+                    path: 'answers',
+                    populate: {
+                        path: 'owner_user_id',
+                    },
+                })
+                .execPopulate()
 
             res.send(question.answers)
         } catch (error) {

@@ -20,8 +20,10 @@ const AnswerController = {
 
             await req.user.save()
             await question.save()
-
             await answer.save()
+
+            await answer.populate('owner_user_id').execPopulate()
+
             res.status(201).send(answer)
         } catch (error) {
             res.status(400).send(error)
