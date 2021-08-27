@@ -103,6 +103,7 @@ const CourseController = {
         try {
             const courses = await Course.find({}, null, {
                 limit: parseInt(req.query.limit),
+                sort: { createdAt: -1 },
             })
 
             for (let index = 0; index < courses.length; index++) {
