@@ -86,7 +86,8 @@ const userSchema = new mongoose.Schema(
         ],
         avatar: {
             type: String,
-            default: 'https://avatarfiles.alphacoders.com/103/103808.jpg',
+            default:
+                'https://nkxdcq.bn.files.1drv.com/y4m3SbwCOliC7q3kUMOdQB8SZIUKQnvXhytYte-xK8R-zjbKu9M9a41LVNBWUepL9vd4JHmr7dRkXxPjZ2sdayBweyFrhMlnU8wMrfd53hbWE9hCWqfYRcnMo0DBYBdibs14luZNAh1Oh8pd15Jaa6t9DKK6i4f3fVxaVKvsvJowMqGMfzvZvC-wMtptLF-WypAuJpjRXMLluNJT5DUbo9MSB8R1KRr5QnwNEPyiUZr7kg/Avatar.png',
         },
         reputation: {
             type: Number,

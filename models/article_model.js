@@ -27,7 +27,8 @@ const articleSchema = new mongoose.Schema(
         },
         banner: {
             type: String,
-            default: 'https://wallpapercave.com/wp/wp2200994.png',
+            default:
+                'https://nkxdcq.bn.files.1drv.com/y4m6lY1W6VyQBNKwws_vSshTmgThIogMGGgT_Tpk5tYfCUX1Q8Rztj_n5n_9ssp-OVPuE0Yfn7O0hqWkVQizvIStUUzPyzt_vYXfmj7212rksW8m5tSwFCeu8p8vqFrQA7zW0F3HEpTD2-CsSfl371QRj1A75QZ2MJ8edbBQlrWXqgmiD0bY2Ob6qc4R-I5WFNQ8HqlpALZK1SqFFBKrep6Rz_4C0PIrG6Q4j4HbvifGsc/Article%20Cover.png',
         },
         tags: [
             {

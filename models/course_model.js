@@ -42,7 +42,8 @@ const courseSchema = new mongoose.Schema(
         },
         banner: {
             type: String,
-            default: 'https://wallpapercave.com/wp/wp2200994.png',
+            default:
+                'https://nkxdcq.bn.files.1drv.com/y4mdeU5si5Yap3sB37UxZ4TC_mCkw_vZtkdbPV0qYH2hLI967klEc-pYGEb9v-hqnDXvXVg30-LPQrWQi5XGLNSo3R1ZxQJmFcPu260QZJS1Y1W1p1TULh0ZPRQuysOUsWoHKnSQOi8FxNatWPXaY5_jQXQ99DftQLuwY7ZQMa2GOtsWr7AD4yuIuUQNFNjBpu632VfnCFXguCmvcCPI7o83gdrCd6E_HohjfwjXZlXmTQ/Course%20Cover.png',
         },
         subscribers: [
             {
