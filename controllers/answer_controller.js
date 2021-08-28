@@ -44,7 +44,13 @@ const AnswerController = {
         try {
             await req.user.populate('answers').execPopulate()
 
-            res.send(req.user.answers)
+            const answers = req.user.answers
+
+            for (let index = 0; index < answers.length; index++) {
+                await answers[index].populate('owner_user_id').execPopulate()
+            }
+
+            res.send(answers)
         } catch (error) {
             res.status(400).send(error)
         }
