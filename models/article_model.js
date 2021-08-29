@@ -28,7 +28,7 @@ const articleSchema = new mongoose.Schema(
         banner: {
             type: String,
             default:
-                'https://nkxdcq.bn.files.1drv.com/y4m6lY1W6VyQBNKwws_vSshTmgThIogMGGgT_Tpk5tYfCUX1Q8Rztj_n5n_9ssp-OVPuE0Yfn7O0hqWkVQizvIStUUzPyzt_vYXfmj7212rksW8m5tSwFCeu8p8vqFrQA7zW0F3HEpTD2-CsSfl371QRj1A75QZ2MJ8edbBQlrWXqgmiD0bY2Ob6qc4R-I5WFNQ8HqlpALZK1SqFFBKrep6Rz_4C0PIrG6Q4j4HbvifGsc/Article%20Cover.png',
+                'https://nkxdcq.bn.files.1drv.com/y4m7cHRaoykfT9nGx3pHQrqELZ4aBfBLtKWSWbBEDUMe0nYQ8Jb8rvmyMBkaC_piCV9iGPTolLouN8Xf1rsg_Wc9XzetKzk4Pvwh_xzuf9LkKqUdWbd0tGFB7BaxhptK0NFUQxxDjw-ZKcHpjvnnLhfqndt_fjeRrq1uUcmobOy_o4XIIt3uCiYeJoiLkiUplY7VssVQ0OpevA0SdMHVIllDBJWBFfuL5SWpbZOU2ei538/Article%20Cover.png',
         },
         tags: [
             {

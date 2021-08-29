@@ -43,7 +43,7 @@ const courseSchema = new mongoose.Schema(
         banner: {
             type: String,
             default:
-                'https://nkxdcq.bn.files.1drv.com/y4mdeU5si5Yap3sB37UxZ4TC_mCkw_vZtkdbPV0qYH2hLI967klEc-pYGEb9v-hqnDXvXVg30-LPQrWQi5XGLNSo3R1ZxQJmFcPu260QZJS1Y1W1p1TULh0ZPRQuysOUsWoHKnSQOi8FxNatWPXaY5_jQXQ99DftQLuwY7ZQMa2GOtsWr7AD4yuIuUQNFNjBpu632VfnCFXguCmvcCPI7o83gdrCd6E_HohjfwjXZlXmTQ/Course%20Cover.png',
+                'https://nkxdcq.bn.files.1drv.com/y4mpucnmk7D8wzBFFfnlFEmdU9UkZBpxlZ88okzdvlCdjd70LVTp1-W_0vLtAEIKOhgT685QcomB4mfLVgRxtwKUl6AIhXcA9OOKsRCMbowA9NQg85po3hrakr2fFV8hoZ_Visq3G6WZAbDQTzF9RpkJ_6uyS1Xhy83JwGnz3wSuKuplvs7OSzmutvC1W-xmcNjKSuFns8y8sMqOd09SkEr_ACBqUXFxvz3CyTOeRyEmXs/Course%20Cover.png',
         },
         subscribers: [
             {
