@@ -6,17 +6,17 @@ const categorySchema = new mongoose.Schema(
             type: String,
             required: true,
             unique: true,
-            trim: true,
+            trim: true
         },
         courses: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Course',
-            },
-        ],
+                ref: 'Course'
+            }
+        ]
     },
     {
-        timestamps: true,
+        timestamps: true
     }
 )
 

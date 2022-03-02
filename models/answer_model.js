@@ -6,39 +6,39 @@ const answerSchema = new mongoose.Schema(
         owner_user_id: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            ref: 'User',
+            ref: 'User'
         },
         question_id: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            ref: 'Question',
+            ref: 'Question'
         },
         body: {
             type: 'String',
-            required: true,
+            required: true
         },
         is_accepted: {
             type: Boolean,
-            default: false,
+            default: false
         },
         votes: [
             {
                 user_id: {
                     type: mongoose.Schema.Types.ObjectId,
                     required: true,
-                    ref: 'User',
+                    ref: 'User'
                 },
                 value: {
                     type: Number,
-                    required: true,
-                },
-            },
-        ],
+                    required: true
+                }
+            }
+        ]
     },
     {
         timestamps: true,
         toObject: { virtuals: true },
-        toJSON: { virtuals: true },
+        toJSON: { virtuals: true }
     }
 )
 

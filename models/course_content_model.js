@@ -4,24 +4,24 @@ const courseContentSchema = new mongoose.Schema({
     course_id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Course',
+        ref: 'Course'
     },
     content_name: {
         type: String,
-        required: true,
+        required: true
     },
     content_link: {
         type: String,
-        required: true,
+        required: true
     },
     content_type: {
         type: String,
-        default: 'video',
+        default: 'video'
     },
     video_duration_in_seconds: {
         type: String,
-        default: '0',
-    },
+        default: '0'
+    }
 })
 
 const CourseContent = mongoose.model('CourseContent', courseContentSchema)

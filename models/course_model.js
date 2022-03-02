@@ -5,16 +5,16 @@ const courseSchema = new mongoose.Schema(
         owner_user_id: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            ref: 'User',
+            ref: 'User'
         },
         title: {
             type: String,
             required: true,
-            unique: true,
+            unique: true
         },
         description: {
             type: String,
-            required: true,
+            required: true
         },
         price: {
             type: Number,
@@ -22,49 +22,49 @@ const courseSchema = new mongoose.Schema(
             validate(value) {
                 if (value < 0)
                     throw new Error('Price must be a positive number')
-            },
+            }
         },
         is_paid: {
             type: Boolean,
-            default: true,
+            default: true
         },
         requirements: {
             type: String,
-            required: true,
+            required: true
         },
         length_of_the_course_in_seconds: {
             type: Number,
-            default: 0,
+            default: 0
         },
         avg_rating: {
             type: Number,
-            default: 0,
+            default: 0
         },
         banner: {
             type: String,
             default:
-                'https://nkxdcq.bn.files.1drv.com/y4mpucnmk7D8wzBFFfnlFEmdU9UkZBpxlZ88okzdvlCdjd70LVTp1-W_0vLtAEIKOhgT685QcomB4mfLVgRxtwKUl6AIhXcA9OOKsRCMbowA9NQg85po3hrakr2fFV8hoZ_Visq3G6WZAbDQTzF9RpkJ_6uyS1Xhy83JwGnz3wSuKuplvs7OSzmutvC1W-xmcNjKSuFns8y8sMqOd09SkEr_ACBqUXFxvz3CyTOeRyEmXs/Course%20Cover.png',
+                'https://nkxdcq.bn.files.1drv.com/y4mpucnmk7D8wzBFFfnlFEmdU9UkZBpxlZ88okzdvlCdjd70LVTp1-W_0vLtAEIKOhgT685QcomB4mfLVgRxtwKUl6AIhXcA9OOKsRCMbowA9NQg85po3hrakr2fFV8hoZ_Visq3G6WZAbDQTzF9RpkJ_6uyS1Xhy83JwGnz3wSuKuplvs7OSzmutvC1W-xmcNjKSuFns8y8sMqOd09SkEr_ACBqUXFxvz3CyTOeRyEmXs/Course%20Cover.png'
         },
         subscribers: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'User',
-            },
+                ref: 'User'
+            }
         ],
         contents: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'CourseContent',
-            },
-        ],
+                ref: 'CourseContent'
+            }
+        ]
     },
     {
-        timestamps: true,
+        timestamps: true
     }
 )
 courseSchema.index({
     title: 'text',
-    description: 'text',
+    description: 'text'
 })
 
 courseSchema.statics = {
@@ -73,8 +73,8 @@ courseSchema.statics = {
             {
                 $or: [
                     { title: new RegExp(q, 'gi') },
-                    { body: new RegExp(q, 'gi') },
-                ],
+                    { body: new RegExp(q, 'gi') }
+                ]
             },
             callback
         )
@@ -83,7 +83,7 @@ courseSchema.statics = {
     searchFull: function (q, callback) {
         return this.find(
             {
-                $text: { $search: q, $caseSensitive: false },
+                $text: { $search: q, $caseSensitive: false }
             },
             callback
         )
@@ -96,7 +96,7 @@ courseSchema.statics = {
             if (!err && data.length === 0)
                 return this.searchPartial(q, callback)
         })
-    },
+    }
 }
 
 const Course = mongoose.model('Course', courseSchema)

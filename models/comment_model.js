@@ -5,20 +5,20 @@ const commentSchema = new mongoose.Schema(
         owner_user_id: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            ref: 'User',
+            ref: 'User'
         },
         article_id: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            ref: 'Article',
+            ref: 'Article'
         },
         body: {
             type: String,
-            required: true,
-        },
+            required: true
+        }
     },
     {
-        timestamps: true,
+        timestamps: true
     }
 )
 

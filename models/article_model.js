@@ -6,16 +6,16 @@ const articleSchema = new mongoose.Schema(
         owner_user_id: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            ref: 'User',
+            ref: 'User'
         },
         content: {
             type: String,
-            required: true,
+            required: true
         },
         title: {
             type: String,
             required: true,
-            unique: true,
+            unique: true
         },
         view_count: {
             type: Number,
@@ -23,43 +23,43 @@ const articleSchema = new mongoose.Schema(
             validate(value) {
                 if (value < 0)
                     throw new Error('View Count must be a positive number')
-            },
+            }
         },
         banner: {
             type: String,
             default:
-                'https://nkxdcq.bn.files.1drv.com/y4m7cHRaoykfT9nGx3pHQrqELZ4aBfBLtKWSWbBEDUMe0nYQ8Jb8rvmyMBkaC_piCV9iGPTolLouN8Xf1rsg_Wc9XzetKzk4Pvwh_xzuf9LkKqUdWbd0tGFB7BaxhptK0NFUQxxDjw-ZKcHpjvnnLhfqndt_fjeRrq1uUcmobOy_o4XIIt3uCiYeJoiLkiUplY7VssVQ0OpevA0SdMHVIllDBJWBFfuL5SWpbZOU2ei538/Article%20Cover.png',
+                'https://nkxdcq.bn.files.1drv.com/y4m7cHRaoykfT9nGx3pHQrqELZ4aBfBLtKWSWbBEDUMe0nYQ8Jb8rvmyMBkaC_piCV9iGPTolLouN8Xf1rsg_Wc9XzetKzk4Pvwh_xzuf9LkKqUdWbd0tGFB7BaxhptK0NFUQxxDjw-ZKcHpjvnnLhfqndt_fjeRrq1uUcmobOy_o4XIIt3uCiYeJoiLkiUplY7VssVQ0OpevA0SdMHVIllDBJWBFfuL5SWpbZOU2ei538/Article%20Cover.png'
         },
         tags: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Tag',
-            },
+                ref: 'Tag'
+            }
         ],
         comments: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Comment',
-            },
+                ref: 'Comment'
+            }
         ],
         likes: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 required: true,
-                ref: 'User',
-            },
-        ],
+                ref: 'User'
+            }
+        ]
     },
     {
         timestamps: true,
         toObject: { virtuals: true },
-        toJSON: { virtuals: true },
+        toJSON: { virtuals: true }
     }
 )
 
 articleSchema.index({
     title: 'text',
-    content: 'text',
+    content: 'text'
 })
 
 articleSchema.statics = {
@@ -68,8 +68,8 @@ articleSchema.statics = {
             {
                 $or: [
                     { title: new RegExp(q, 'gi') },
-                    { body: new RegExp(q, 'gi') },
-                ],
+                    { body: new RegExp(q, 'gi') }
+                ]
             },
             callback
         )
@@ -78,7 +78,7 @@ articleSchema.statics = {
     searchFull: function (q, callback) {
         return this.find(
             {
-                $text: { $search: q, $caseSensitive: false },
+                $text: { $search: q, $caseSensitive: false }
             },
             callback
         )
@@ -91,7 +91,7 @@ articleSchema.statics = {
             if (!err && data.length === 0)
                 return this.searchPartial(q, callback)
         })
-    },
+    }
 }
 
 articleSchema.methods.getLikedByMe = async function (id) {

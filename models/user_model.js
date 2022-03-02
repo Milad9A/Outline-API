@@ -10,11 +10,11 @@ const userSchema = new mongoose.Schema(
         name: {
             type: String,
             required: true,
-            trim: true,
+            trim: true
         },
         role: {
-            type: Role,
-            default: Role.BASIC_USER,
+            type: String,
+            default: Role.BASIC_USER
         },
         email: {
             type: String,
@@ -25,69 +25,69 @@ const userSchema = new mongoose.Schema(
             validate(value) {
                 if (!validator.isEmail(value))
                     throw new Error('Email is invalid')
-            },
+            }
         },
         password: {
             type: String,
             required: true,
             minlength: 7,
-            trim: true,
+            trim: true
         },
         fcm_token: {
             type: String,
-            default: '',
+            default: ''
         },
         aboutMe: {
             type: String,
             trim: true,
-            default: "I'm a human :)",
+            default: "I'm a human :)"
         },
         tags: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Tag',
-            },
+                ref: 'Tag'
+            }
         ],
         questions: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Question',
-            },
+                ref: 'Question'
+            }
         ],
         answers: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Answer',
-            },
+                ref: 'Answer'
+            }
         ],
         articles: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Article',
-            },
+                ref: 'Article'
+            }
         ],
         comments: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Comment',
-            },
+                ref: 'Comment'
+            }
         ],
         courses: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Course',
-            },
+                ref: 'Course'
+            }
         ],
         purchased_courses: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Course',
-            },
+                ref: 'Course'
+            }
         ],
         avatar: {
             type: String,
             default:
-                'https://nkxdcq.bn.files.1drv.com/y4m3SbwCOliC7q3kUMOdQB8SZIUKQnvXhytYte-xK8R-zjbKu9M9a41LVNBWUepL9vd4JHmr7dRkXxPjZ2sdayBweyFrhMlnU8wMrfd53hbWE9hCWqfYRcnMo0DBYBdibs14luZNAh1Oh8pd15Jaa6t9DKK6i4f3fVxaVKvsvJowMqGMfzvZvC-wMtptLF-WypAuJpjRXMLluNJT5DUbo9MSB8R1KRr5QnwNEPyiUZr7kg/Avatar.png',
+                'https://nkxdcq.bn.files.1drv.com/y4m3SbwCOliC7q3kUMOdQB8SZIUKQnvXhytYte-xK8R-zjbKu9M9a41LVNBWUepL9vd4JHmr7dRkXxPjZ2sdayBweyFrhMlnU8wMrfd53hbWE9hCWqfYRcnMo0DBYBdibs14luZNAh1Oh8pd15Jaa6t9DKK6i4f3fVxaVKvsvJowMqGMfzvZvC-wMtptLF-WypAuJpjRXMLluNJT5DUbo9MSB8R1KRr5QnwNEPyiUZr7kg/Avatar.png'
         },
         reputation: {
             type: Number,
@@ -95,19 +95,19 @@ const userSchema = new mongoose.Schema(
             validate(value) {
                 if (value < 0)
                     throw new Error('Reputation must be a positive number')
-            },
+            }
         },
         tokens: [
             {
                 token: {
                     type: String,
-                    required: true,
-                },
-            },
-        ],
+                    required: true
+                }
+            }
+        ]
     },
     {
-        timestamps: true,
+        timestamps: true
     }
 )
 
